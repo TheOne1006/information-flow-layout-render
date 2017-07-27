@@ -1,13 +1,25 @@
 
 export interface IbaseStyle {
-  display: string
-  position: string
-  top: number
-  left: number
-  width: number
-  height: number
-  overflow: string
-  "text-decoration": string
+  display?: string
+  position?: string
+  top?: number
+  left?: number
+  width?: number
+  height?: number | string
+  overflow?: string
+  "text-decoration"?: string
+  "font-size"?: string | number
+  "font-family"?: string
+  color?: string
+  "text-align"?: string
+  "background-color"?: string
+  "line-height"?: string
+  "white-space"?: string
+  "text-overflow"?: string
+  "o-text-overflow"?: string
+  padding?: string
+  margin?: string
+  border?: string
 }
 
 export default class StyleCtrl {
@@ -51,7 +63,8 @@ export default class StyleCtrl {
       for (let attrName in styleObject) {
         if (styleObject.hasOwnProperty(attrName)) {
           const val = styleObject[attrName]
-          styleStr += attrName + ":" + styleObject[attrName] + (pxStyles[attrName] ? "px;" : ";")
+          const isNeedSuffixPx = !!pxStyles[attrName] && (!isNaN(parseFloat(val)) && isFinite(val))
+          styleStr += attrName + ":" + styleObject[attrName] + (isNeedSuffixPx ? "px;" : ";")
         }
       }
     }
@@ -78,6 +91,17 @@ export default class StyleCtrl {
     container.style.cssText = styleStr
   }
 
+  /**
+   * 追加元素的样式设置
+   * @param {object} container    dom 元素
+   * @param {object} stylesObject styles 对象
+   */
+  protected appendStyle = (container: HTMLElement, stylesObject?: object) => {
+    const appendStr = this.genStyle(stylesObject)
+    const originCssText = container.style.cssText
+    container.style.cssText = originCssText + appendStr
+  }
+
   public setBaseStyles(container: HTMLElement, style: IbaseStyle) {
     // todo
     const { display, position, top, left, width, height } = style
@@ -91,6 +115,14 @@ export default class StyleCtrl {
       overflow: "hidden",
       "text-decoration": "none",
     }
-    this.setStyle(container)
+    this.setStyle(container, this.styleBuf)
+  }
+
+  public appendSingleFontStyle (container: HTMLElement, style: IbaseStyle) {
+    this.appendStyle(container, style)
+  }
+
+  public setLineEleStyles (container: HTMLElement, style: IbaseStyle) {
+    this.appendStyle(container, style)
   }
 }
