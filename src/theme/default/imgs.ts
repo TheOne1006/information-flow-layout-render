@@ -1,7 +1,9 @@
 import "core-js/fn/object/assign"
 
 const spacingMd = 10
+const spacingSm = 5
 const baseFontSize = 18
+const baseLineHeight = 20
 
 /**
  * wrap 样式
@@ -9,6 +11,7 @@ const baseFontSize = 18
 const defaultWrapConfig = {
   top: 0,
   left: 0,
+  // width: winWidth,
   height: "auto",
   display: "block",
   position: "",
@@ -17,10 +20,13 @@ const defaultWrapConfig = {
   "text-decoration": "none",
 }
 
+
 export const configWrapCreate = (winWidth: number, customStyles?: any ) => {
   return Object.assign({},
     defaultWrapConfig,
-    { width: winWidth },
+    {
+      width: winWidth,
+    },
     customStyles
   )
 }
@@ -28,7 +34,7 @@ export const configWrapCreate = (winWidth: number, customStyles?: any ) => {
 /**
  * title 样式
  */
-const defaultTitleContainerConfig = {
+const defaultTitleConfig = {
   top: 0,
   left: spacingMd,
   height: "auto",
@@ -39,20 +45,20 @@ const defaultTitleContainerConfig = {
   "font-family":  "Arial, Helvetica, sans-serif",
   "text-align": "left",
   // "background-colror": "#",
-  "line-height": "auto",
+  "line-height": baseLineHeight,
   overflow: "hidden",
   "white-space": "nowrap",
   "text-overflow": "ellipsis",
   "o-text-overflow": "ellipsis",
   "text-decoration": "none",
   padding: "",
-  margin: `${spacingMd}px 0px 0px ${spacingMd}px`,
+  margin: `${spacingSm * 3}px 0px 0px ${spacingMd}px`,
   border: "",
 }
 
-export const configTitleContainerCreate = (winWidth: number, customStyles?: any ) => {
+export const configTitleCreate = (winWidth: number, customStyles?: any ) => {
   return Object.assign({},
-    defaultTitleContainerConfig,
+    defaultTitleConfig,
     {
       width: winWidth - 2 * spacingMd,
     },
@@ -61,39 +67,37 @@ export const configTitleContainerCreate = (winWidth: number, customStyles?: any 
 }
 
 /**
- * img container 样式
+ * imgItem 样式
  */
-const defaultImgContainerConfig = {
-  top: 0,
+const defaultImgItemConfig = {
+  top: spacingSm,
   left: spacingMd,
-  // width: customHeight,
-  // height: customHeight * 1 / 2.3,
-  display: "block",
+  // width: width, (winWidth - 6) / 3
+  // height: "auto", m * 66 / 98;
+  display: "inline-block",
   position: "",
-  "background-size": "cover",
-  overflow: "hidden",
-  border: "",
-  margin: `${spacingMd/2}px 0px 0px ${spacingMd}px`,
   padding: "",
+  margin: `${spacingSm}px 0px ${spacingMd}px ${spacingMd}px`,
+  border: ""
 }
 
-export const configImgContainerCreate = (winWidth: number, customStyles?: any ) => {
-  const width = winWidth - 2 * spacingMd
+export const configImgItemCreate = (winWidth: number, customStyles?: any , itemLen: number = 3) => {
+  const wrapWidth = winWidth - 2 * spacingMd
+  const width = (wrapWidth - itemLen * 2) / itemLen
+
   return Object.assign({},
-    defaultImgContainerConfig,
+    defaultImgItemConfig,
     {
-      width,
-      height: width * 1 / 2.3,
+      width: width,
+      height: width * 66 / 98,
     },
     customStyles
   )
 }
 
 
-
-
 export default {
   configWrapCreate,
-  configTitleContainerCreate,
-  configImgContainerCreate,
+  configTitleCreate,
+  configImgItemCreate,
 }

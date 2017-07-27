@@ -3,6 +3,7 @@ import "core-js/fn/object/assign"
 const spacingMd = 10
 const spacingSm = 5
 const baseFontSize = 18
+const baseLineHeight = 20
 
 /**
  * wrap 样式
@@ -104,7 +105,7 @@ const defaultTitleWrapConfig = {
   "font-family":  "Arial, Helvetica, sans-serif",
   "text-align": "left",
   // "background-colror": "#",
-  "line-height": 20,
+  "line-height": baseLineHeight,
 }
 
 export const configTitleWrapCreate = (winWidth: number, customStyles?: any ) => {
