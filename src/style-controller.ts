@@ -48,9 +48,6 @@ export default class StyleCtrl {
     right: 1,
   }
 
-  protected styleBuf = {}
-
-
   /**
    * 组装成单行的 style 内联字符串
    * @param  {object} styleObject 样式对象
@@ -70,59 +67,14 @@ export default class StyleCtrl {
     }
     return styleStr
   }
-
-  /**
-   * 设置dom 元素样式
-   * @param {object} container    dom 元素
-   * @param {object} stylesObject styles 对象
-   */
-  protected setStyle = (container: HTMLElement, stylesObject?: object) => {
-    let styleStr = ""
-    if (!stylesObject) {
-      styleStr = this.genStyle(this.styleBuf)
-    } else {
-      styleStr = this.genStyle(stylesObject)
-    }
-    // 兼容 ie
-    // if (!window.attachEvent) {
-    //   container.setAttribute("style", styleStr)
-    // } else {
-    // }
-    container.style.cssText = styleStr
-  }
-
   /**
    * 追加元素的样式设置
    * @param {object} container    dom 元素
    * @param {object} stylesObject styles 对象
    */
-  protected appendStyle = (container: HTMLElement, stylesObject?: object) => {
+  appendStyle = (container: HTMLElement, stylesObject?: object) => {
     const appendStr = this.genStyle(stylesObject)
     const originCssText = container.style.cssText
     container.style.cssText = originCssText + appendStr
-  }
-
-  public setBaseStyles(container: HTMLElement, style: IbaseStyle) {
-    // todo
-    const { display, position, top, left, width, height } = style
-    this.styleBuf = {
-      display,
-      position,
-      top,
-      left,
-      width,
-      height,
-      overflow: "hidden",
-      "text-decoration": "none",
-    }
-    this.setStyle(container, this.styleBuf)
-  }
-
-  public appendSingleFontStyle (container: HTMLElement, style: IbaseStyle) {
-    this.appendStyle(container, style)
-  }
-
-  public setLineEleStyles (container: HTMLElement, style: IbaseStyle) {
-    this.appendStyle(container, style)
   }
 }

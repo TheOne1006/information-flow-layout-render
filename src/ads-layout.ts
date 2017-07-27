@@ -23,6 +23,8 @@ export interface IadItemModel {
   type?: any
 }
 
+const styleController = new StyleCtrl()
+
 export default class AdsRenderRect {
   static shapeType = {
     BIG_IMG: 0,     // 全文大图
@@ -30,26 +32,20 @@ export default class AdsRenderRect {
     IMGS: 2,   // 多图模式
   }
   winWidth: number
-  winHeight: number
   constructor() {
     // 获取 innerHeight / innerWidth
-    if (window.innerHeight && window.innerWidth) {
+    if (window.innerHeight) {
       this.winWidth = window.innerWidth
-      this.winHeight = window.innerHeight
     } else {
-      if ((document.body) && (document.body.clientHeight) && (document.body.clientWidth)) {
-        this.winHeight = document.body.clientHeight
+      if ((document.body) && (document.body.clientWidth)) {
         this.winWidth = document.body && document.body.clientWidth
       }
     }
   }
-
   public render(domId: string, data: object[]) {
-    this.paintAd(domId, data)
-    console.log("render")
-  }
-  public paintAd(domId: string, data: object[]) {
     const body = document.body
+    // 通过文档碎片插入
+    const fragment = document.createDocumentFragment()
     const container = domId && document.getElementById(domId) || body
     const BIG_IMG = AdsRenderRect.shapeType.BIG_IMG
     const IMG_TEXT = AdsRenderRect.shapeType.IMG_TEXT
@@ -58,58 +54,64 @@ export default class AdsRenderRect {
     data.forEach((item: IadItemModel) => {
       switch(item.stype) {
         case BIG_IMG:
-          this.renderBigImgItem(container, item)
+          this.renderBigImgItem(fragment, item)
         break
         case IMG_TEXT:
-          this.renderImgTextItem(container, item)
+          this.renderImgTextItem(fragment, item)
         break
         case IMGS:
-          this.renderImgsItem(container, item)
+          this.renderImgsItem(fragment, item)
         break
         default:
           return
       }
     })
+    container.appendChild(fragment)
   }
-  renderBigImgItem(container: HTMLElement, adItem: IadItemModel) {
+  buildDom(nodeName: string, attrs: any = {}, createStyles?: Function) {
+    const target: any = document.createElement(nodeName)
+    for (let attrName in attrs) {
+      if (attrs.hasOwnProperty(attrName)) {
+        target[attrName] = attrs[attrName]
+      }
+    }
+
+    if (createStyles) {
+      const styles = createStyles()
+      styleController.appendStyle(target, styles)
+    }
+
+    return target
+  }
+  renderBigImgItem(container: DocumentFragment, adItem: IadItemModel) {
     const { title, curl, imageUrl, target, type, src, desc, time } = adItem
-    const stype = AdsRenderRect.shapeType.BIG_IMG
     if (!imageUrl) {
       return
     }
 
+    const winWidth = this.winWidth
+
     /**
      * 创建基础 wrap dom
      */
-    const wrapDom = document.createElement("a")
-    wrapDom.href = curl
-    wrapDom.target = target || "_self"
-    wrapDom.title = title
-
-
-    const styleController = new StyleCtrl()
-    /**
-     * 样式计算
-     * 1. 尝试冲缓存中获取 styleCtrl
-     */
-    const winWidth = this.winWidth
-    const wrapStyles = bigImgStyle.configWrapCreate(winWidth)
-    styleController.appendSingleFontStyle(wrapDom, wrapStyles)
+    const wrapDom = this.buildDom("a", {
+      href: curl,
+      target: target || "_self",
+      title,
+    }, () => bigImgStyle.configWrapCreate(winWidth))
 
     /**
      * title Dom
      */
-    const titleDom = document.createElement("span")
-    titleDom.innerHTML = title
-    const titleStyles = bigImgStyle.configTitleContainerCreate(winWidth)
-    styleController.appendSingleFontStyle(titleDom, titleStyles)
+    const titleDom = this.buildDom("span", {
+      innerHTML: title
+    }, () => bigImgStyle.configTitleContainerCreate(winWidth))
     wrapDom.appendChild(titleDom)
 
     // img container
-    const imgContentDom = document.createElement("div")
-    const imgStyles = bigImgStyle.configImgContainerCreate(winWidth)
-
-    styleController.appendSingleFontStyle(imgContentDom, imgStyles)
+    const imgContentDom = this.buildDom("div",
+      {},
+      () => bigImgStyle.configImgContainerCreate(winWidth))
     imgContentDom.style.background = `url(${imageUrl}) center center no-repeat`
     imgContentDom.style.backgroundSize = "cover"
 
@@ -126,12 +128,10 @@ export default class AdsRenderRect {
     const lineDom = this.createLineDom(0, "")
     wrapDom.appendChild(lineDom)
     container.appendChild(wrapDom)
-    container.style.display = "block"
-
+    return container
   }
-  renderImgTextItem(container: HTMLElement, adItem: IadItemModel) {
+  renderImgTextItem(container: DocumentFragment, adItem: IadItemModel) {
     const { title, curl, imageUrl, target, type, src, time, desc } = adItem
-    const stype = AdsRenderRect.shapeType.IMG_TEXT
     if (!imageUrl) {
       return
     }
@@ -140,47 +140,45 @@ export default class AdsRenderRect {
     /**
      * warp
      */
-    const wrapDom = document.createElement("a")
-    wrapDom.href = curl
-    wrapDom.target = target || "_self"
-    wrapDom.title = title
-
-    const styleController = new StyleCtrl()
-
-    const wrapStyles = imgTextStyle.configWrapCreate(winWidth)
-    styleController.appendSingleFontStyle(wrapDom, wrapStyles)
+    const wrapDom = this.buildDom("a",
+      {
+        href: curl,
+        target: target || "_self",
+        title: title,
+      },
+      () => imgTextStyle.configWrapCreate(winWidth))
 
     /**
      * 左侧图片
      */
-    const imgDom = document.createElement("div")
-    const imgStyles = imgTextStyle.configImgCreate(winWidth)
+    const imgDom = this.buildDom("div",
+      {},
+      () => imgTextStyle.configImgCreate(winWidth))
     imgDom.style.background = `url(${imageUrl}) center center no-repeat`
     imgDom.style.backgroundSize = "cover"
 
-    styleController.appendSingleFontStyle(imgDom, imgStyles)
-
     wrapDom.appendChild(imgDom)
-
 
     /**
      * 右侧内容
      */
-    const rightContent = document.createElement("div")
-    const rightStyles = imgTextStyle.configRightCreate(winWidth)
-    styleController.appendSingleFontStyle(rightContent, rightStyles)
+    const rightContent = this.buildDom("div",
+      {},
+      () => imgTextStyle.configRightCreate(winWidth)
+    )
 
     /**
      * title 相关
      */
-    const titleWrapDom = document.createElement("div")
-    const titleWrapStyles = imgTextStyle.configTitleWrapCreate(winWidth)
-    styleController.appendSingleFontStyle(titleWrapDom, titleWrapStyles)
+    const titleWrapDom = this.buildDom("div" ,
+      {},
+      () => imgTextStyle.configTitleWrapCreate(winWidth)
+    )
 
-    const titleDom = document.createElement("span")
-    const titleStyles = imgTextStyle.configTitleCreate(winWidth)
-    styleController.appendSingleFontStyle(titleWrapDom, titleStyles)
-    titleDom.innerText = title
+    const titleDom = this.buildDom("span", {
+      innerText: title,
+    },
+    () => imgTextStyle.configTitleCreate(winWidth))
 
     titleWrapDom.appendChild(titleDom)
     rightContent.appendChild(titleWrapDom)
@@ -199,40 +197,31 @@ export default class AdsRenderRect {
     wrapDom.appendChild(lineDom)
 
     container.appendChild(wrapDom)
-    container.style.display = "block"
-    console.log("render ImgText Item")
+    return container
   }
-  renderImgsItem(container: HTMLElement, adItem: IadItemModel){
+  renderImgsItem(container: DocumentFragment, adItem: IadItemModel){
     const { title, curl, images, target, desc, src, time, type } = adItem
     if (!images || images.length === 0) {
       return
     }
 
+    const winWidth = this.winWidth
+
     /**
      * 创建基础 wrap dom
      */
-    const wrapDom = document.createElement("a")
-    wrapDom.href = curl
-    wrapDom.target = target || "_self"
-    wrapDom.title = title
-
-
-    const styleController = new StyleCtrl()
-    /**
-     * 样式计算
-     * 1. 尝试冲缓存中获取 styleCtrl
-     */
-    const winWidth = this.winWidth
-    const wrapStyles = imgsStyle.configWrapCreate(winWidth)
-    styleController.appendSingleFontStyle(wrapDom, wrapStyles)
+    const wrapDom = this.buildDom("a", {
+      href: curl,
+      target: target || "_self",
+      title: title,
+    }, () => imgsStyle.configWrapCreate(winWidth))
 
     /**
      * title
      */
-    const titleDom = document.createElement("span")
-    titleDom.innerHTML = title
-    const titleStyles = imgsStyle.configTitleCreate(winWidth)
-    styleController.appendSingleFontStyle(titleDom, titleStyles)
+    const titleDom = this.buildDom("span", {
+      innerText: title,
+    }, () => imgsStyle.configTitleCreate(winWidth))
     wrapDom.appendChild(titleDom)
 
     /**
@@ -242,16 +231,16 @@ export default class AdsRenderRect {
     for (let i = 0; i < imgLen; i++) {
       const curImg = images[i]
 
-      const imgItem = document.createElement("div")
       const customStyle: any = {}
 
       if (i !== 0) {
         customStyle["margin-left"] = "3px"
       }
 
-      const imgStyles = imgsStyle.configImgItemCreate(winWidth, customStyle, imgLen)
-
-      styleController.appendSingleFontStyle(imgItem, imgStyles)
+      const imgItem = this.buildDom("div",
+        {},
+        () => imgsStyle.configImgItemCreate(winWidth, customStyle, imgLen)
+      )
       imgItem.style.background = `url(${curImg}) center center no-repeat`
       imgItem.style.backgroundSize = "cover"
 
@@ -270,18 +259,15 @@ export default class AdsRenderRect {
     wrapDom.appendChild(lineDom)
 
     container.appendChild(wrapDom)
-    container.style.display = "block"
-    console.log("render Imgs Item")
+    return container
   }
   createLineDom(top: number, position: string) {
-    const lineDom = document.createElement("div")
-    const styleController = new StyleCtrl()
-    const lineStyles = createLineStyles(this.winWidth, {
-      top,
-      position
-    })
-
-    styleController.appendSingleFontStyle(lineDom, lineStyles)
+    const lineDom = this.buildDom("div",
+      {},
+      () => createLineStyles(this.winWidth, {
+        top,
+        position
+      }))
 
     return lineDom
   }
@@ -292,7 +278,6 @@ export default class AdsRenderRect {
     }
     target.innerHTML = desc
 
-    const styleController = new StyleCtrl()
     const descStyles = createDescStyles(this.winWidth, {
       top,
       left,
@@ -300,7 +285,7 @@ export default class AdsRenderRect {
       "margin-left": left,
     })
 
-    styleController.appendSingleFontStyle(target, descStyles)
+    styleController.appendStyle(target, descStyles)
 
     return target
   }
@@ -309,7 +294,6 @@ export default class AdsRenderRect {
     if (!src || !time) {
       return target
     }
-    const styleController = new StyleCtrl()
 
     const customStyles = {
       top,
@@ -320,16 +304,16 @@ export default class AdsRenderRect {
     }
 
     const wrapStyles = srcTimeStyles.configWrapCreate(this.winWidth, customStyles)
-    styleController.appendSingleFontStyle(target, wrapStyles)
+    styleController.appendStyle(target, wrapStyles)
 
     const srcDom = document.createElement("div")
     const itemStyles = srcTimeStyles.configItemCreate(this.winWidth, {"line-height": height})
     srcDom.innerText = src
-    styleController.appendSingleFontStyle(srcDom, itemStyles)
+    styleController.appendStyle(srcDom, itemStyles)
 
     const timeDom = document.createElement("div")
     timeDom.innerText = time
-    styleController.appendSingleFontStyle(timeDom, itemStyles)
+    styleController.appendStyle(timeDom, itemStyles)
 
     target.appendChild(srcDom)
     target.appendChild(timeDom)

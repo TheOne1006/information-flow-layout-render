@@ -24,7 +24,7 @@ const defaultConfig = {
   "text-overflow": "ellipsis",
   "o-text-overflow": "ellipsis",
   padding: "",
-  margin: "0px 0px ${spacingMd}px 0px", // from custom
+  // margin: "0px 0px ${spacingMd}px 0px", // from custom
   border: ""
 }
 

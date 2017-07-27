@@ -26,7 +26,7 @@ describe("style-controller test", () => {
     expect(receivedStr).toBe(expectStr)
   })
 
-  it("protected func setStyle with validate data", () => {
+  it("protected func appendStyle with validate data", () => {
     const styles = {
       display: "block",
       width: 100
@@ -35,13 +35,13 @@ describe("style-controller test", () => {
 
     const styleCtrl = new StyleCtrl() as any
     const divEle = document.createElement("div")
-    styleCtrl.setStyle(divEle, styles)
+    styleCtrl.appendStyle(divEle, styles)
     const receivedStr = divEle.style.cssText
 
     expect(receivedStr).toBe(expectStr)
   })
 
-  it("public func setBaseStyles with validate data", () => {
+  it("public func appendStyle with validate data", () => {
     const styles = {
       display: "display",
       position: "relative",
@@ -50,11 +50,11 @@ describe("style-controller test", () => {
       width: 100,
       height: 100
     }
-    const expectStr = "display: display; position: relative; top: 0px; left: 0px; width: 100px; height: 100px; overflow: hidden; text-decoration: none;"
+    const expectStr = "display: display; position: relative; top: 0px; left: 0px; width: 100px; height: 100px;"
 
     const styleCtrl = new StyleCtrl() as any
     const divEle = document.createElement("div")
-    styleCtrl.setBaseStyles(divEle, styles)
+    styleCtrl.appendStyle(divEle, styles)
     const receivedStr = divEle.style.cssText
 
     expect(receivedStr).toBe(expectStr)
