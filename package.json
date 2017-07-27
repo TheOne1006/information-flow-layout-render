@@ -1,11 +1,11 @@
 {
-  "name": "ads-layout",
-  "version": "0.0.0",
-  "description": "",
-  "keywords": [],
-  "main": "dist/ads-layout.umd.js",
-  "module": "dist/ads-layout.es5.js",
-  "typings": "dist/types/ads-layout.d.ts",
+  "name": "information-flow-layout-render",
+  "version": "0.0.1",
+  "description": "information flow render for ads",
+  "keywords": ["ads", "flow"],
+  "main": "dist/information-flow-layout-render.umd.js",
+  "module": "dist/information-flow-layout-render.es5.js",
+  "typings": "dist/types/information-flow-layout-render.d.ts",
   "files": [
     "dist"
   ],

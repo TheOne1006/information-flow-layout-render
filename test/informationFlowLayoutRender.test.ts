@@ -1,34 +1,34 @@
-import AdsLayout from "../src/ads-layout"
+import InformationFlowLayoutRender from "../src/InformationFlowLayoutRender"
 import {} from "jest"
 
 describe("ads-layout test", () => {
-  let adsLayout
+  let layout
   beforeEach(() => {
-    adsLayout = new AdsLayout()
+    layout = new InformationFlowLayoutRender()
   })
 
   it("works if true is truthy", () => {
     expect(true).toBeTruthy()
   })
 
-  it("AdsLayout is instantiable", () => {
-    expect(new AdsLayout()).toBeInstanceOf(AdsLayout)
+  it("InformationFlowLayoutRender is instantiable", () => {
+    expect(new InformationFlowLayoutRender()).toBeInstanceOf(InformationFlowLayoutRender)
   })
 
-  describe("AdsLayout Fun buildDom to create dom", () => {
+  describe("InformationFlowLayoutRender Fun buildDom to create dom", () => {
     it("only create dom", () => {
-      const target = adsLayout.buildDom("a")
+      const target = layout.buildDom("a")
       expect(target.nodeName).toBe("A")
     })
 
     it("create dom and Set attrbuites", () => {
-      const target = adsLayout.buildDom("div", { id: "id" })
+      const target = layout.buildDom("div", { id: "id" })
       expect(target.nodeName).toBe("DIV")
       expect(target.id).toBe("id")
     })
 
     it("create dom and Set styles", () => {
-      const target = adsLayout.buildDom("span", {}, () => ({
+      const target = layout.buildDom("span", {}, () => ({
         "border": "1px solid #ccc",
       }))
       expect(target.nodeName).toBe("SPAN")
@@ -36,14 +36,14 @@ describe("ads-layout test", () => {
     })
   })
 
-  describe("AdsLayout Fun renderBigImgItem to create some dom", () => {
+  describe("InformationFlowLayoutRender Fun renderBigImgItem to create some dom", () => {
     let targetDom
     beforeEach(() => {
       targetDom = document.createElement("div")
     })
 
     it("return undefined with error arguments" , () => {
-      const expectd = adsLayout.renderBigImgItem(targetDom, { title: "title" })
+      const expectd = layout.renderBigImgItem(targetDom, { title: "title" })
       expect(expectd).toBe(undefined)
     })
 
@@ -57,7 +57,7 @@ describe("ads-layout test", () => {
         desc: "desc",
         time: ""
       }
-      adsLayout.renderBigImgItem(targetDom, itemOptions)
+      layout.renderBigImgItem(targetDom, itemOptions)
       const childrens = targetDom.children
       const wrapDom = childrens[0]
       expect(wrapDom.nodeName).toBe("A")
@@ -75,7 +75,7 @@ describe("ads-layout test", () => {
         desc: "desc",
         time: ""
       }
-      adsLayout.renderBigImgItem(targetDom, itemOptions)
+      layout.renderBigImgItem(targetDom, itemOptions)
       const childrens = targetDom.children
       const wrapDom = childrens[0]
       expect(wrapDom.nodeName).toBe("A")
@@ -84,14 +84,14 @@ describe("ads-layout test", () => {
     })
   })
 
-  describe("AdsLayout Fun renderImgTextItem to create some dom", () => {
+  describe("InformationFlowLayoutRender Fun renderImgTextItem to create some dom", () => {
     let targetDom
     beforeEach(() => {
       targetDom = document.createElement("div")
     })
 
     it("return undefined with error arguments" , () => {
-      const expectd = adsLayout.renderImgTextItem(targetDom, { title: "title" })
+      const expectd = layout.renderImgTextItem(targetDom, { title: "title" })
       expect(expectd).toBe(undefined)
     })
 
@@ -105,7 +105,7 @@ describe("ads-layout test", () => {
         desc: "desc",
         time: ""
       }
-      adsLayout.renderImgTextItem(targetDom, itemOptions)
+      layout.renderImgTextItem(targetDom, itemOptions)
       const childrens = targetDom.children
       const wrapDom = childrens[0]
       expect(wrapDom.nodeName).toBe("A")
@@ -123,7 +123,7 @@ describe("ads-layout test", () => {
         desc: "desc",
         time: ""
       }
-      adsLayout.renderImgTextItem(targetDom, itemOptions)
+      layout.renderImgTextItem(targetDom, itemOptions)
       const childrens = targetDom.children
       const wrapDom = childrens[0]
       expect(wrapDom.nodeName).toBe("A")
@@ -132,14 +132,14 @@ describe("ads-layout test", () => {
     })
   })
 
-  describe("AdsLayout Fun renderImgsItem to create some dom", () => {
+  describe("InformationFlowLayoutRender Fun renderImgsItem to create some dom", () => {
     let targetDom
     beforeEach(() => {
       targetDom = document.createElement("div")
     })
 
     it("return undefined with error arguments" , () => {
-      const expectd = adsLayout.renderImgsItem(targetDom, { title: "title" })
+      const expectd = layout.renderImgsItem(targetDom, { title: "title" })
       expect(expectd).toBe(undefined)
     })
 
@@ -158,7 +158,7 @@ describe("ads-layout test", () => {
         desc: "desc",
         time: ""
       }
-      adsLayout.renderImgsItem(targetDom, itemOptions)
+      layout.renderImgsItem(targetDom, itemOptions)
       const childrens = targetDom.children
       const wrapDom = childrens[0]
       expect(wrapDom.nodeName).toBe("A")
@@ -181,7 +181,7 @@ describe("ads-layout test", () => {
         desc: "desc",
         time: ""
       }
-      adsLayout.renderImgsItem(targetDom, itemOptions)
+      layout.renderImgsItem(targetDom, itemOptions)
       const childrens = targetDom.children
       const wrapDom = childrens[0]
       expect(wrapDom.nodeName).toBe("A")

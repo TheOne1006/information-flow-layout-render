@@ -4,8 +4,8 @@ import sourceMaps from 'rollup-plugin-sourcemaps'
 const pkg = require('./package.json')
 // const camelCase = require('lodash.camelcase')
 
-const libraryName = 'Ads-layout'
-const libModuleName = 'AdsLayout';
+const libraryName = 'InformationFlowLayoutRender'
+const libModuleName = 'InformationFlowLayoutRender';
 
 export default {
   entry: `compiled/${libraryName}.js`,

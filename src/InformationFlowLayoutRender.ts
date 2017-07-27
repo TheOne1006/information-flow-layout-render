@@ -2,7 +2,7 @@
   // import "core-js/fn/array.find"
   // ...
 // import "core-js/fn/array.forEach"
-import StyleCtrl from "./style-controller"
+import StyleCtrl from "./styleController"
 import createLineStyles from "./theme/default/baseLine"
 import createDescStyles from "./theme/default/desc"
 import srcTimeStyles from "./theme/default/srcTime"
@@ -25,11 +25,15 @@ export interface IadItemModel {
 
 const styleController = new StyleCtrl()
 
-export default class AdsRenderRect {
-  static shapeType = {
+export default class InformationFlowLayoutRender {
+  static layoutType = {
     BIG_IMG: 0,     // 全文大图
     IMG_TEXT: 1,  // 左侧1张图, 右侧内容
     IMGS: 2,   // 多图模式
+  }
+  static remarkType = {
+    SHOW_DESC: 0,
+    SHOW_SRC_TIME: 1,
   }
   winWidth: number
   constructor() {
@@ -42,30 +46,40 @@ export default class AdsRenderRect {
       }
     }
   }
-  public render(domId: string, data: object[]) {
+  public render(dom: string | HTMLElement, data: object[]) {
     const body = document.body
     // 通过文档碎片插入
     const fragment = document.createDocumentFragment()
-    const container = domId && document.getElementById(domId) || body
-    const BIG_IMG = AdsRenderRect.shapeType.BIG_IMG
-    const IMG_TEXT = AdsRenderRect.shapeType.IMG_TEXT
-    const IMGS = AdsRenderRect.shapeType.IMGS
+    let container
+
+    if (dom && typeof dom === "string") {
+      container = document.getElementById(dom) || body
+    } else if (typeof dom === "object" && dom instanceof HTMLElement) {
+      container = dom
+    }
+
+    if (!container) return
+
+    const BIG_IMG = InformationFlowLayoutRender.layoutType.BIG_IMG
+    const IMG_TEXT = InformationFlowLayoutRender.layoutType.IMG_TEXT
+    const IMGS = InformationFlowLayoutRender.layoutType.IMGS
 
     data.forEach((item: IadItemModel) => {
       switch(item.stype) {
         case BIG_IMG:
-          this.renderBigImgItem(fragment, item)
+        this.renderBigImgItem(fragment, item)
         break
         case IMG_TEXT:
-          this.renderImgTextItem(fragment, item)
+        this.renderImgTextItem(fragment, item)
         break
         case IMGS:
-          this.renderImgsItem(fragment, item)
+        this.renderImgsItem(fragment, item)
         break
         default:
-          return
+        return
       }
     })
+
     container.appendChild(fragment)
   }
   buildDom(nodeName: string, attrs: any = {}, createStyles?: Function) {
@@ -117,10 +131,10 @@ export default class AdsRenderRect {
 
     wrapDom.appendChild(imgContentDom)
 
-    if (type === 0 && desc) {
+    if (type === InformationFlowLayoutRender.remarkType.SHOW_DESC && desc) {
       const descDom = this.createDescDom(desc, 10, 10)
       wrapDom.appendChild(descDom)
-    } else if (src && time) {
+    } else if (type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME && src && time) {
       const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 10, 10, 20)
       wrapDom.appendChild(srcAndTimeDom)
     }
@@ -183,10 +197,10 @@ export default class AdsRenderRect {
     titleWrapDom.appendChild(titleDom)
     rightContent.appendChild(titleWrapDom)
 
-    if (type === 0 && desc) {
+    if (type === InformationFlowLayoutRender.remarkType.SHOW_DESC && desc) {
       const descDom = this.createDescDom(desc, 15, 0)
       rightContent.appendChild(descDom)
-    } else if (src && time) {
+    } else if (type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME && src && time) {
       const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 0, 0, 20)
       rightContent.appendChild(srcAndTimeDom)
     }
@@ -247,10 +261,10 @@ export default class AdsRenderRect {
       wrapDom.appendChild(imgItem)
     }
 
-    if (type === 0 && desc) {
+    if (type === InformationFlowLayoutRender.remarkType.SHOW_DESC && desc) {
       const descDom = this.createDescDom(desc, 0, 10)
       wrapDom.appendChild(descDom)
-    } else if (src && time) {
+    } else if (type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME && src && time) {
       const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 0, 10, 20)
       wrapDom.appendChild(srcAndTimeDom)
     }

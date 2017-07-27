@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0">
 </head>
 <body>
+  <h2>title</h2>
 <div id="fh_top_item">
-  123
 </div>
 </body>
-<script src="../dist/ads-layout.umd.js">
+<script src="../dist/information-flow-layout-render.umd.js">
 </script>
 <script>
 const mockData = [{
@@ -78,7 +78,7 @@ const mockData = [{
       "time":"4-19",
     }
 ];
-const adApp = new AdsLayout();
+const adApp = new InformationFlowLayoutRender();
 adApp.render('fh_top_item', mockData);
 </script>
 </html>

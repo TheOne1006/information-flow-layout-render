@@ -1,6 +1,81 @@
-# Ads Layouts Render
+# information flow layout render
+
+1. Only fit the mobile end
+2. without anything library
 
 ### Usage
+```bash
+yarn information-flow-layout-render
+
+```
+
+```js
+// in js file
+import InformationFlowLayoutRender from 'information-flow-layout-render'
+const app = new InformationFlowLayoutRender();
+/**
+ * @param {string} / {HTMLElement} dom对象, 或者 唯一id   string
+ * @type {array}
+ */
+app.render(dom , data)
+```
+
+data 格式
+```js
+// stype 布局模式
+const BIG_IMG = 0    // 全文大图
+const IMG_TEXT = 1   // 左侧1张图, 右侧内容
+const IMGS = 2       // 多图模式
+
+// type
+const SHOW_DESC = 0       // 显示描述
+const SHOW_SRC_TIME = 1   // 显示来源和日期
+
+var data = [
+  // 三图模式
+  {
+    "curl":"http://url.com",          // 跳转地址
+    "title":"title",                  // 必填
+    "desc":"this is a description",   // SHOW_DESC 显示描述, 必填, 否则不显示
+    "images": [
+      "img uri",
+      "img uri",
+      "img uri",
+    ],
+    "src":"来源",
+    "time":"yy-dd",
+    "stype": IMGS,
+    "type": SHOW_DESC,
+  },
+  // 大图模式
+  {
+    "curl":"http://www.url.com",          // 跳转地址
+    "title":"title",
+    "desc":"this is a description",    // SHOW_SRC_TIME 非必填
+    "imageUrl": "img uri",         // 只需要一张图片
+    "src":"来源",   // SHOW_SRC_TIME 必填
+    "time":"yy-dd", // SHOW_SRC_TIME 必填
+    "stype": BIG_IMG,
+    "type": SHOW_SRC_TIME,
+  },
+  // 左图右文
+  {
+    "curl":"http://www.url.com",          // 跳转地址
+    "title":"title",
+    "desc":"this is a description",    // SHOW_DESC 必填
+    "imageUrl": "img uri",         // 只需要一张图片
+    "src":"来源",   // SHOW_DESC 非必填
+    "time":"yy-dd", // SHOW_DESC 非必填
+    "stype": IMG_TEXT,
+    "type": SHOW_DESC,
+  },
+]
+
+```
+
+
+
+### Development
 
 ```bash
 git clone https://github.com/alexjoverm/typescript-library-starter.git YOURFOLDERNAME

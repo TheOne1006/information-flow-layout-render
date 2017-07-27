@@ -1,4 +1,4 @@
-import StyleCtrl from "../src/style-controller"
+import StyleCtrl from "../src/styleController"
 import {} from "jest"
 
 describe("style-controller test", () => {
