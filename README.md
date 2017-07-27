@@ -6,7 +6,8 @@
 ### Usage
 ```bash
 yarn information-flow-layout-render
-
+# or
+npm install --save information-flow-layout-render
 ```
 
 ```js
@@ -78,7 +79,7 @@ var data = [
 ### Development
 
 ```bash
-git clone https://github.com/alexjoverm/typescript-library-starter.git YOURFOLDERNAME
+git clone https://github.com/TheOne1006/information-flow-layout-render.git YOURFOLDERNAME
 cd YOURFOLDERNAME
 
 # Run npm install and write your library name when asked. That's all!
