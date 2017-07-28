@@ -21,6 +21,12 @@ const app = new InformationFlowLayoutRender();
 app.render(dom , data)
 ```
 
+```html
+<!-- in html file  -->
+<script type="text/javascript" src="/<path>/<to>/<dir>/information-flow-layout-render.umd.min.js">
+</script>
+```
+
 data 格式
 ```js
 // stype 布局模式

@@ -2,7 +2,10 @@
   "name": "information-flow-layout-render",
   "version": "0.0.2",
   "description": "information flow render for ads",
-  "keywords": ["ads", "flow"],
+  "keywords": [
+    "ads",
+    "flow"
+  ],
   "main": "dist/information-flow-layout-render.umd.js",
   "module": "dist/information-flow-layout-render.es5.js",
   "typings": "dist/types/information-flow-layout-render.d.ts",
@@ -29,9 +32,11 @@
     "deploy-docs": "ts-node tools/gh-pages-publish",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release": "semantic-release-cli pre && npm publish && semantic-release-cli post",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prepush": "npm run test:prod && npm run build",
+    "commitmsg": "validate-commit-msg"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
