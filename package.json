@@ -1,6 +1,6 @@
 {
   "name": "information-flow-layout-render",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "information flow render for ads",
   "keywords": ["ads", "flow"],
   "main": "dist/information-flow-layout-render.umd.js",
@@ -9,10 +9,10 @@
   "files": [
     "dist"
   ],
-  "author": "theone <297190869@qq.com>",
+  "author": "theone1006 <297190869@qq.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/TheOne1006/information-flow-layout-render.git"
   },
   "license": "MIT",
   "engines": {
