@@ -12,17 +12,13 @@ const defaultWrapConfig = {
   height: "auto",
   display: "block",
   position: "",
-  "background-color":  "#fff",
+  "background-color": "#fff",
   overflow: "hidden",
-  "text-decoration": "none",
+  "text-decoration": "none"
 }
 
-export const configWrapCreate = (winWidth: number, customStyles?: any ) => {
-  return Object.assign({},
-    defaultWrapConfig,
-    { width: winWidth },
-    customStyles
-  )
+export const configWrapCreate = (winWidth: number, customStyles?: any) => {
+  return Object.assign({}, defaultWrapConfig, { width: winWidth }, customStyles)
 }
 
 /**
@@ -36,25 +32,29 @@ const defaultTitleContainerConfig = {
   position: "",
   "font-size": baseFontSize,
   color: "#000",
-  "font-family":  "Arial, Helvetica, sans-serif",
+  "font-family": "Arial, Helvetica, sans-serif",
   "text-align": "left",
   // "background-colror": "#",
   "line-height": "auto",
   overflow: "hidden",
-  "white-space": "nowrap",
+  // "white-space": "nowrap",
   "text-overflow": "ellipsis",
   "o-text-overflow": "ellipsis",
   "text-decoration": "none",
   padding: "",
   margin: `${spacingMd}px 0px 0px ${spacingMd}px`,
-  border: "",
+  border: ""
 }
 
-export const configTitleContainerCreate = (winWidth: number, customStyles?: any ) => {
-  return Object.assign({},
+export const configTitleContainerCreate = (
+  winWidth: number,
+  customStyles?: any
+) => {
+  return Object.assign(
+    {},
     defaultTitleContainerConfig,
     {
-      width: winWidth - 2 * spacingMd,
+      width: winWidth - 2 * spacingMd
     },
     customStyles
   )
@@ -73,27 +73,28 @@ const defaultImgContainerConfig = {
   "background-size": "cover",
   overflow: "hidden",
   border: "",
-  margin: `${spacingMd/2}px 0px 0px ${spacingMd}px`,
-  padding: "",
+  margin: `${spacingMd / 2}px 0px 0px ${spacingMd}px`,
+  padding: ""
 }
 
-export const configImgContainerCreate = (winWidth: number, customStyles?: any ) => {
+export const configImgContainerCreate = (
+  winWidth: number,
+  customStyles?: any
+) => {
   const width = winWidth - 2 * spacingMd
-  return Object.assign({},
+  return Object.assign(
+    {},
     defaultImgContainerConfig,
     {
       width,
-      height: width * 1 / 2.3,
+      height: width * 1 / 2.3
     },
     customStyles
   )
 }
 
-
-
-
 export default {
   configWrapCreate,
   configTitleContainerCreate,
-  configImgContainerCreate,
+  configImgContainerCreate
 }

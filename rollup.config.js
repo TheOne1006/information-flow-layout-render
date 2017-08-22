@@ -1,11 +1,17 @@
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import sourceMaps from 'rollup-plugin-sourcemaps'
+import uglify from 'rollup-plugin-uglify';
+import { minify } from 'uglify-es';
+
 const pkg = require('./package.json')
 // const camelCase = require('lodash.camelcase')
 
 const libraryName = 'InformationFlowLayoutRender'
 const libModuleName = 'InformationFlowLayoutRender';
+
+console.log('process.env.NODE_ENV');
+console.log(process.env.NODE_ENV);
 
 export default {
   entry: `compiled/${libraryName}.js`,
@@ -25,6 +31,7 @@ export default {
     resolve(),
 
     // Resolve source maps to the original source
-    sourceMaps()
+    sourceMaps(),
+    (process.env.NODE_ENV === 'production' && uglify({}, minify)),
   ]
 }

@@ -15,17 +15,17 @@ const defaultWrapConfig = {
   height: "auto",
   display: "block",
   position: "",
-  "background-color":  "#fff",
+  "background-color": "#fff",
   overflow: "hidden",
-  "text-decoration": "none",
+  "text-decoration": "none"
 }
 
-
-export const configWrapCreate = (winWidth: number, customStyles?: any ) => {
-  return Object.assign({},
+export const configWrapCreate = (winWidth: number, customStyles?: any) => {
+  return Object.assign(
+    {},
     defaultWrapConfig,
     {
-      width: winWidth,
+      width: winWidth
     },
     customStyles
   )
@@ -42,25 +42,27 @@ const defaultTitleConfig = {
   position: "",
   "font-size": baseFontSize,
   color: "#000",
-  "font-family":  "Arial, Helvetica, sans-serif",
+  "font-family": "Arial, Helvetica, sans-serif",
   "text-align": "left",
   // "background-colror": "#",
   "line-height": baseLineHeight,
   overflow: "hidden",
-  "white-space": "nowrap",
+  // "white-space": "nowrap",
+  "-webkit-line-clamp": "2",
   "text-overflow": "ellipsis",
   "o-text-overflow": "ellipsis",
   "text-decoration": "none",
   padding: "",
-  margin: `${spacingSm * 3}px 0px 0px ${spacingMd}px`,
-  border: "",
+  margin: `${spacingSm * 3}px ${spacingMd}px 0px`,
+  border: ""
 }
 
-export const configTitleCreate = (winWidth: number, customStyles?: any ) => {
-  return Object.assign({},
+export const configTitleCreate = (winWidth: number, customStyles?: any) => {
+  return Object.assign(
+    {},
     defaultTitleConfig,
     {
-      width: winWidth - 2 * spacingMd,
+      width: winWidth - 2 * spacingMd
     },
     customStyles
   )
@@ -81,23 +83,27 @@ const defaultImgItemConfig = {
   border: ""
 }
 
-export const configImgItemCreate = (winWidth: number, customStyles?: any , itemLen: number = 3) => {
+export const configImgItemCreate = (
+  winWidth: number,
+  customStyles?: any,
+  itemLen: number = 3
+) => {
   const wrapWidth = winWidth - 2 * spacingMd
   const width = (wrapWidth - itemLen * 2) / itemLen
 
-  return Object.assign({},
+  return Object.assign(
+    {},
     defaultImgItemConfig,
     {
       width: width,
-      height: width * 66 / 98,
+      height: width * 66 / 98
     },
     customStyles
   )
 }
 
-
 export default {
   configWrapCreate,
   configTitleCreate,
-  configImgItemCreate,
+  configImgItemCreate
 }

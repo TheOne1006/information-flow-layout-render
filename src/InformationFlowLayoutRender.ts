@@ -1,6 +1,6 @@
 // Import here Polyfills if needed. Recommended core-js (npm i -D core-js)
-  // import "core-js/fn/array.find"
-  // ...
+// import "core-js/fn/array.find"
+// ...
 // import "core-js/fn/array.forEach"
 import StyleCtrl from "./styleController"
 import createLineStyles from "./theme/default/baseLine"
@@ -27,25 +27,24 @@ const styleController = new StyleCtrl()
 
 export default class InformationFlowLayoutRender {
   static layoutType = {
-    BIG_IMG: 0,     // 全文大图
-    IMG_TEXT: 1,  // 左侧1张图, 右侧内容
-    IMGS: 2,   // 多图模式
+    BIG_IMG: 0, // 全文大图
+    IMG_TEXT: 1, // 左侧1张图, 右侧内容
+    IMGS: 2 // 多图模式
   }
   static remarkType = {
     SHOW_DESC: 0,
-    SHOW_SRC_TIME: 1,
+    SHOW_SRC_TIME: 1
   }
   winWidth: number
   constructor() {
-    // 获取 innerHeight / innerWidth
-    if (window.innerHeight) {
-      this.winWidth = window.innerWidth
+    if (document.body && document.body.clientWidth) {
+      this.winWidth = document.body && document.body.clientWidth
     } else {
-      if ((document.body) && (document.body.clientWidth)) {
-        this.winWidth = document.body && document.body.clientWidth
-      }
+      // 获取 innerHeight / innerWidth
+      this.winWidth = window.innerWidth
     }
   }
+
   public render(dom: string | HTMLElement, data: object[]) {
     const body = document.body
     // 通过文档碎片插入
@@ -65,18 +64,18 @@ export default class InformationFlowLayoutRender {
     const IMGS = InformationFlowLayoutRender.layoutType.IMGS
 
     data.forEach((item: IadItemModel) => {
-      switch(item.stype) {
+      switch (item.stype) {
         case BIG_IMG:
-        this.renderBigImgItem(fragment, item)
-        break
+          this.renderBigImgItem(fragment, item)
+          break
         case IMG_TEXT:
-        this.renderImgTextItem(fragment, item)
-        break
+          this.renderImgTextItem(fragment, item)
+          break
         case IMGS:
-        this.renderImgsItem(fragment, item)
-        break
+          this.renderImgsItem(fragment, item)
+          break
         default:
-        return
+          return
       }
     })
 
@@ -108,24 +107,32 @@ export default class InformationFlowLayoutRender {
     /**
      * 创建基础 wrap dom
      */
-    const wrapDom = this.buildDom("a", {
-      href: curl,
-      target: target || "_self",
-      title,
-    }, () => bigImgStyle.configWrapCreate(winWidth))
+    const wrapDom = this.buildDom(
+      "a",
+      {
+        href: curl,
+        target: target || "_self",
+        title
+      },
+      () => bigImgStyle.configWrapCreate(winWidth)
+    )
 
     /**
      * title Dom
      */
-    const titleDom = this.buildDom("span", {
-      innerHTML: title
-    }, () => bigImgStyle.configTitleContainerCreate(winWidth))
+    const titleDom = this.buildDom(
+      "span",
+      {
+        innerHTML: title
+      },
+      () => bigImgStyle.configTitleContainerCreate(winWidth)
+    )
     wrapDom.appendChild(titleDom)
 
     // img container
-    const imgContentDom = this.buildDom("div",
-      {},
-      () => bigImgStyle.configImgContainerCreate(winWidth))
+    const imgContentDom = this.buildDom("div", {}, () =>
+      bigImgStyle.configImgContainerCreate(winWidth)
+    )
     imgContentDom.style.background = `url(${imageUrl}) center center no-repeat`
     imgContentDom.style.backgroundSize = "cover"
 
@@ -134,7 +141,11 @@ export default class InformationFlowLayoutRender {
     if (type === InformationFlowLayoutRender.remarkType.SHOW_DESC && desc) {
       const descDom = this.createDescDom(desc, 10, 10)
       wrapDom.appendChild(descDom)
-    } else if (type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME && src && time) {
+    } else if (
+      type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME &&
+      src &&
+      time
+    ) {
       const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 10, 10, 20)
       wrapDom.appendChild(srcAndTimeDom)
     }
@@ -154,20 +165,22 @@ export default class InformationFlowLayoutRender {
     /**
      * warp
      */
-    const wrapDom = this.buildDom("a",
+    const wrapDom = this.buildDom(
+      "a",
       {
         href: curl,
         target: target || "_self",
-        title: title,
+        title: title
       },
-      () => imgTextStyle.configWrapCreate(winWidth))
+      () => imgTextStyle.configWrapCreate(winWidth)
+    )
 
     /**
      * 左侧图片
      */
-    const imgDom = this.buildDom("div",
-      {},
-      () => imgTextStyle.configImgCreate(winWidth))
+    const imgDom = this.buildDom("div", {}, () =>
+      imgTextStyle.configImgCreate(winWidth)
+    )
     imgDom.style.background = `url(${imageUrl}) center center no-repeat`
     imgDom.style.backgroundSize = "cover"
 
@@ -176,32 +189,37 @@ export default class InformationFlowLayoutRender {
     /**
      * 右侧内容
      */
-    const rightContent = this.buildDom("div",
-      {},
-      () => imgTextStyle.configRightCreate(winWidth)
+    const rightContent = this.buildDom("div", {}, () =>
+      imgTextStyle.configRightCreate(winWidth)
     )
 
     /**
      * title 相关
      */
-    const titleWrapDom = this.buildDom("div" ,
-      {},
-      () => imgTextStyle.configTitleWrapCreate(winWidth)
+    const titleWrapDom = this.buildDom("div", {}, () =>
+      imgTextStyle.configTitleWrapCreate(winWidth)
     )
 
-    const titleDom = this.buildDom("span", {
-      innerText: title,
-    },
-    () => imgTextStyle.configTitleCreate(winWidth))
+    const titleDom = this.buildDom(
+      "span",
+      {
+        innerText: title
+      },
+      () => imgTextStyle.configTitleCreate(winWidth)
+    )
 
     titleWrapDom.appendChild(titleDom)
     rightContent.appendChild(titleWrapDom)
 
     if (type === InformationFlowLayoutRender.remarkType.SHOW_DESC && desc) {
-      const descDom = this.createDescDom(desc, 15, 0)
+      const descDom = this.createDescDom(desc, 10, 0)
       rightContent.appendChild(descDom)
-    } else if (type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME && src && time) {
-      const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 0, 0, 20)
+    } else if (
+      type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME &&
+      src &&
+      time
+    ) {
+      const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 5, 0, 20)
       rightContent.appendChild(srcAndTimeDom)
     }
 
@@ -213,7 +231,7 @@ export default class InformationFlowLayoutRender {
     container.appendChild(wrapDom)
     return container
   }
-  renderImgsItem(container: DocumentFragment, adItem: IadItemModel){
+  renderImgsItem(container: DocumentFragment, adItem: IadItemModel) {
     const { title, curl, images, target, desc, src, time, type } = adItem
     if (!images || images.length === 0) {
       return
@@ -224,18 +242,26 @@ export default class InformationFlowLayoutRender {
     /**
      * 创建基础 wrap dom
      */
-    const wrapDom = this.buildDom("a", {
-      href: curl,
-      target: target || "_self",
-      title: title,
-    }, () => imgsStyle.configWrapCreate(winWidth))
+    const wrapDom = this.buildDom(
+      "a",
+      {
+        href: curl,
+        target: target || "_self",
+        title: title
+      },
+      () => imgsStyle.configWrapCreate(winWidth)
+    )
 
     /**
      * title
      */
-    const titleDom = this.buildDom("span", {
-      innerText: title,
-    }, () => imgsStyle.configTitleCreate(winWidth))
+    const titleDom = this.buildDom(
+      "span",
+      {
+        innerText: title
+      },
+      () => imgsStyle.configTitleCreate(winWidth)
+    )
     wrapDom.appendChild(titleDom)
 
     /**
@@ -251,9 +277,8 @@ export default class InformationFlowLayoutRender {
         customStyle["margin-left"] = "3px"
       }
 
-      const imgItem = this.buildDom("div",
-        {},
-        () => imgsStyle.configImgItemCreate(winWidth, customStyle, imgLen)
+      const imgItem = this.buildDom("div", {}, () =>
+        imgsStyle.configImgItemCreate(winWidth, customStyle, imgLen)
       )
       imgItem.style.background = `url(${curImg}) center center no-repeat`
       imgItem.style.backgroundSize = "cover"
@@ -264,7 +289,11 @@ export default class InformationFlowLayoutRender {
     if (type === InformationFlowLayoutRender.remarkType.SHOW_DESC && desc) {
       const descDom = this.createDescDom(desc, 0, 10)
       wrapDom.appendChild(descDom)
-    } else if (type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME && src && time) {
+    } else if (
+      type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME &&
+      src &&
+      time
+    ) {
       const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 0, 10, 20)
       wrapDom.appendChild(srcAndTimeDom)
     }
@@ -276,12 +305,12 @@ export default class InformationFlowLayoutRender {
     return container
   }
   createLineDom(top: number, position: string) {
-    const lineDom = this.buildDom("div",
-      {},
-      () => createLineStyles(this.winWidth, {
+    const lineDom = this.buildDom("div", {}, () =>
+      createLineStyles(this.winWidth, {
         top,
         position
-      }))
+      })
+    )
 
     return lineDom
   }
@@ -296,32 +325,45 @@ export default class InformationFlowLayoutRender {
       top,
       left,
       "margin-top": top,
-      "margin-left": left,
+      "margin-left": left
     })
 
     styleController.appendStyle(target, descStyles)
 
     return target
   }
-  createSrcAndTimeDom(src: string, time: string, top: number, left: number, height: number) {
+  createSrcAndTimeDom(
+    src: string,
+    time: string,
+    top: number,
+    left: number,
+    height: number
+  ) {
     const target = document.createElement("div")
     if (!src || !time) {
       return target
     }
 
+    console.log("top")
+    console.log(top)
     const customStyles = {
       top,
       left,
       height,
       "margin-left": left,
-      "margin-top": top,
+      "margin-top": top
     }
 
-    const wrapStyles = srcTimeStyles.configWrapCreate(this.winWidth, customStyles)
+    const wrapStyles = srcTimeStyles.configWrapCreate(
+      this.winWidth,
+      customStyles
+    )
     styleController.appendStyle(target, wrapStyles)
 
     const srcDom = document.createElement("div")
-    const itemStyles = srcTimeStyles.configItemCreate(this.winWidth, {"line-height": height})
+    const itemStyles = srcTimeStyles.configItemCreate(this.winWidth, {
+      "line-height": height
+    })
     srcDom.innerText = src
     styleController.appendStyle(srcDom, itemStyles)
 

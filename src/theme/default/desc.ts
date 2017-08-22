@@ -11,16 +11,16 @@ const defaultConfig = {
   height: 12,
   display: "inline-block",
   position: "",
-  "background-color":  "#fff",
+  "background-color": "#fff",
   overflow: "hidden",
   "text-decoration": "none",
   "font-size": smFontSize,
   color: "#999",
-  "font-family":  "Arial, Helvetica, sans-serif",
+  "font-family": "Arial, Helvetica, sans-serif",
   "text-align": "left",
   // "background-colror": "#",
   "line-height": 12,
-  "white-space": "nowrap",
+  // "white-space": "nowrap",
   "text-overflow": "ellipsis",
   "o-text-overflow": "ellipsis",
   padding: "",
@@ -28,10 +28,7 @@ const defaultConfig = {
   border: ""
 }
 
-function configCreate (winWidth: number, customStyles: any)  {
-  return Object.assign({},
-    defaultConfig,
-    customStyles
-  )
+function configCreate(winWidth: number, customStyles: any) {
+  return Object.assign({}, defaultConfig, customStyles)
 }
 export default configCreate

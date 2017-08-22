@@ -1,6 +1,6 @@
 import "core-js/fn/object/assign"
 
-const itemFontSize = 13
+const itemFontSize = 12
 const itemFontColor = "#999"
 
 const defaultWrapConfig = {
@@ -11,15 +11,11 @@ const defaultWrapConfig = {
   display: "block",
   position: "",
   "line-height": "100%",
-  "text-align": "left",
+  "text-align": "left"
 }
 
-
-function configWrapCreate (winWidth: number, customStyles: any)  {
-  return Object.assign({},
-    defaultWrapConfig,
-    customStyles
-  )
+function configWrapCreate(winWidth: number, customStyles: any) {
+  return Object.assign({}, defaultWrapConfig, customStyles)
 }
 
 const defaultItemConfig = {
@@ -31,24 +27,21 @@ const defaultItemConfig = {
   position: "",
   "font-size": itemFontSize,
   color: itemFontColor,
-  "font-family":  "Arial, Helvetica, sans-serif",
+  "font-family": "Arial, Helvetica, sans-serif",
   "text-align": "left",
   // "background-colror": "#",
   // "line-height": 12, // from customStyles
   "white-space": "nowrap",
   "text-overflow": "ellipsis",
   "o-text-overflow": "ellipsis",
-  "margin-right": "8px",
+  "margin-right": "8px"
 }
 
-function configItemCreate (winWidth: number, customStyles: any)  {
-  return Object.assign({},
-    defaultItemConfig,
-    customStyles
-  )
+function configItemCreate(winWidth: number, customStyles: any) {
+  return Object.assign({}, defaultItemConfig, customStyles)
 }
 
 export default {
   configWrapCreate,
-  configItemCreate,
+  configItemCreate
 }
