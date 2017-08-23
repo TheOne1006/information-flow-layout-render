@@ -40,6 +40,9 @@ const SHOW_SRC_TIME = 1   // 显示来源和日期
 
 var data = [
   // 三图模式
+  // 图片比例 - 宽高比例 3:2
+  // iphone6中尺寸为 - 宽高 124px: 83.5px
+  // Galaxy S5 尺寸 - 宽高 106px : 71.3px
   {
     "curl":"http://url.com",          // 跳转地址
     "title":"title",                  // 必填
@@ -55,6 +58,9 @@ var data = [
     "type": SHOW_DESC,
   },
   // 大图模式
+  // 图片比例: 宽高比例 2 : 1 左右
+  // iphone6中尺寸为 - 宽高 378px : 164.3px
+  // Galaxy S5 尺寸 - 宽高 324px : 140.87px
   {
     "curl":"http://www.url.com",          // 跳转地址
     "title":"title",
@@ -66,6 +72,9 @@ var data = [
     "type": SHOW_SRC_TIME,
   },
   // 左图右文
+  // 图片比例: 宽高比例 3:2
+  // iphone6中尺寸为 - 宽高 124px: 82.0px
+  // Galaxy S5 尺寸 - 宽高 107px : 70.95px
   {
     "curl":"http://www.url.com",          // 跳转地址
     "title":"title",
