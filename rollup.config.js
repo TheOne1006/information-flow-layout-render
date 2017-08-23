@@ -10,9 +10,6 @@ const pkg = require('./package.json')
 const libraryName = 'InformationFlowLayoutRender'
 const libModuleName = 'InformationFlowLayoutRender';
 
-console.log('process.env.NODE_ENV');
-console.log(process.env.NODE_ENV);
-
 export default {
   entry: `compiled/${libraryName}.js`,
   targets: [

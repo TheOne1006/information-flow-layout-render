@@ -1,4 +1,3 @@
-
 export interface IbaseStyle {
   display?: string
   position?: string
@@ -23,7 +22,6 @@ export interface IbaseStyle {
 }
 
 export default class StyleCtrl {
-
   static pxStyles = {
     width: 1,
     height: 1,
@@ -45,7 +43,20 @@ export default class StyleCtrl {
     top: 1,
     left: 1,
     bottom: 1,
-    right: 1,
+    right: 1
+  }
+
+  /**
+   * 获取 dom 对象的 属性
+   * @param {object} obj  dom 对象
+   * @param {String} prop 属性名
+   */
+  static getCurrentStyle = (dom: any, prop: any) => {
+    if (dom.currentStyle) {
+      return dom.currentStyle[prop]
+    } else if (window.getComputedStyle) {
+      return window.getComputedStyle(dom)[prop]
+    }
   }
 
   /**
@@ -60,8 +71,13 @@ export default class StyleCtrl {
       for (let attrName in styleObject) {
         if (styleObject.hasOwnProperty(attrName)) {
           const val = styleObject[attrName]
-          const isNeedSuffixPx = !!pxStyles[attrName] && (!isNaN(parseFloat(val)) && isFinite(val))
-          styleStr += attrName + ":" + styleObject[attrName] + (isNeedSuffixPx ? "px;" : ";")
+          const isNeedSuffixPx =
+            !!pxStyles[attrName] && (!isNaN(parseFloat(val)) && isFinite(val))
+          styleStr +=
+            attrName +
+            ":" +
+            styleObject[attrName] +
+            (isNeedSuffixPx ? "px;" : ";")
         }
       }
     }

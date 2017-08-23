@@ -3,6 +3,7 @@
 // ...
 // import "core-js/fn/array.forEach"
 import StyleCtrl from "./styleController"
+import LoadCtrl from "./loadController"
 import createLineStyles from "./theme/default/baseLine"
 import createDescStyles from "./theme/default/desc"
 import srcTimeStyles from "./theme/default/srcTime"
@@ -23,6 +24,11 @@ export interface IadItemModel {
   type?: any
 }
 
+export interface IrenderOption {
+  watchScroll?: boolean
+  onEndReachedThreshold?: number // 极限值达到之后加载信息
+}
+
 const styleController = new StyleCtrl()
 
 export default class InformationFlowLayoutRender {
@@ -36,15 +42,54 @@ export default class InformationFlowLayoutRender {
     SHOW_SRC_TIME: 1
   }
   winWidth: number
-  constructor() {
+  loadObj: any
+  constructor(
+    initData: object[],
+    pageShowNum: number,
+    mockRemoteLoad: boolean
+  ) {
     if (document.body && document.body.clientWidth) {
       this.winWidth = document.body && document.body.clientWidth
     } else {
       // 获取 innerHeight / innerWidth
       this.winWidth = window.innerWidth
     }
-  }
 
+    const loadOptions = {
+      initData,
+      nextPage: 2,
+      pageShowNum,
+      mockRemoteLoad,
+      baseUri: ""
+    }
+
+    this.loadObj = new LoadCtrl(loadOptions)
+  }
+  public init(dom: string | HTMLElement, option: IrenderOption = {}) {
+    const body = document.body
+    let container
+    if (dom && typeof dom === "string") {
+      container = document.getElementById(dom) || body
+    } else if (typeof dom === "object" && dom instanceof HTMLElement) {
+      container = dom
+    }
+
+    if (!container) return
+
+    const loadObj = this.loadObj
+
+    // 渲染初始化的数据
+    loadObj.getInit((data: any) => this.render(dom, data))
+
+    // 监听滚动事件
+    const needWatchScroll = option.watchScroll
+
+    if (needWatchScroll) {
+      this.watchScroll(container, option.onEndReachedThreshold, (data: any) =>
+        this.render(dom, data)
+      )
+    }
+  }
   public render(dom: string | HTMLElement, data: object[]) {
     const body = document.body
     // 通过文档碎片插入
@@ -80,6 +125,36 @@ export default class InformationFlowLayoutRender {
     })
 
     container.appendChild(fragment)
+  }
+  // 监听 滚动
+  public watchScroll(
+    dom: HTMLElement,
+    onEndReachedThreshold: number = 50,
+    loadFun: Function
+  ) {
+    // validate allow scroll
+    const attrScroll = StyleCtrl.getCurrentStyle(dom, "overflow")
+    const attrHeight = StyleCtrl.getCurrentStyle(dom, "height")
+    const loadObj = this.loadObj
+
+    let watchDom = document.body
+
+    if (
+      attrHeight !== "" &&
+      (attrScroll === "auto" || attrScroll === "scroll")
+    ) {
+      watchDom = dom
+    }
+
+    const watchHeight = watchDom.clientHeight
+    watchDom.onscroll = function(e) {
+      const watchDomHeight = watchDom.scrollHeight
+      const scrollTop = watchDomHeight - watchDom.scrollTop - watchHeight
+      if (scrollTop <= onEndReachedThreshold) {
+        console.log("loading...")
+        loadObj.getNext(loadFun)
+      }
+    }
   }
   buildDom(nodeName: string, attrs: any = {}, createStyles?: Function) {
     const target: any = document.createElement(nodeName)
@@ -344,8 +419,6 @@ export default class InformationFlowLayoutRender {
       return target
     }
 
-    console.log("top")
-    console.log(top)
     const customStyles = {
       top,
       left,
