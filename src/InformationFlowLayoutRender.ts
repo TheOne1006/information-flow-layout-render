@@ -387,7 +387,7 @@ export default class InformationFlowLayoutRender {
     if (!desc) {
       return target
     }
-    target.innerHTML = desc
+    target.innerText = desc
 
     const descStyles = createDescStyles(this.winWidth, {
       top,
@@ -444,10 +444,10 @@ export default class InformationFlowLayoutRender {
   }
   createHeader() {
     this.headerDom = this.buildDom("div", {}, () =>
-      headerStyle.configWrapCreate(0)
+      headerStyle.configWrapCreate(this.winWidth)
     )
     const title = this.buildDom("div", {}, () =>
-      headerStyle.configTitleCreate(0)
+      headerStyle.configTitleCreate(this.winWidth)
     )
     title.innerText = "猜你喜欢"
     this.headerDom.appendChild(title)
@@ -456,7 +456,7 @@ export default class InformationFlowLayoutRender {
   createFooter(isEnd: boolean) {
     if (!this.footerDom) {
       this.footerDom = this.buildDom("div", {}, () =>
-        footerStyle.configWrapCreate(0)
+        footerStyle.configWrapCreate(this.winWidth)
       )
     }
     const target = this.footerDom
