@@ -1,5 +1,3 @@
-import {} from "whatwg-fetch"
-
 const DEFAULT_PAGE_NUM = 1
 const DEFAULT_PAGE_SHOW_NUM = 5
 
@@ -8,7 +6,7 @@ export interface IconstructorOption {
   nextPage?: number
   pageShowNum?: number
   mockRemoteLoad?: boolean
-  baseUri?: string
+  ajaxFetch?: Function
 }
 
 export default class LoadCtrl {
@@ -18,13 +16,13 @@ export default class LoadCtrl {
   mockRemoteLoad: boolean
   isEnd: boolean
   data: object[]
-  baseUri: string
+  ajaxFetch: Function
   constructor({
     initData = [],
     nextPage = DEFAULT_PAGE_NUM,
     pageShowNum = DEFAULT_PAGE_SHOW_NUM,
     mockRemoteLoad = false,
-    baseUri = ""
+    ajaxFetch
   }: IconstructorOption) {
     this.loading = false
     this.isEnd = false
@@ -32,32 +30,48 @@ export default class LoadCtrl {
     this.mockRemoteLoad = mockRemoteLoad
     this.showNum = pageShowNum
     this.data = initData
-    this.baseUri = baseUri
+    if (ajaxFetch) {
+      this.ajaxFetch = ajaxFetch
+    }
   }
-  public fetch(uri: string, callback: Function) {
+  public fetchData(page: number, callback: Function) {
+    /**
+     * 这里不处理 ajax 信息
+     */
     if (this.loading) return
+    if (this.isEnd) return
 
     this.loading = true
-    fetch(uri)
-      .then(response => {
-        const data = response.json
-        this.loading = false
+    const fetch = this.ajaxFetch
 
-        // 加载结束
-        if (this.showNum < data.length) {
-          this.isEnd = true
-        }
+    const success = (data: object[]) => {
+      this.loading = false
+      // 加载结束
+      if (this.showNum > data.length) {
+        this.isEnd = true
+      }
+      callback(data)
+    }
 
-        callback(data)
-      })
-      .catch(console.warn)
+    const fail = (data: any) => {
+      this.loading = false
+      this.isEnd = true
+      console.warn(data)
+    }
+
+    fetch({
+      page,
+      success,
+      fail
+    })
   }
   public fetchNext(callback: Function) {
     if (this.loading) return
-    const baseUri = this.baseUri
-    const uri = `${baseUri}?page=${this.page}`
-    this.page = this.page + 1
-    this.fetch(uri, callback)
+    if (this.isEnd) return
+
+    const page = this.page
+    this.page = page + 1
+    this.fetchData(page, callback)
   }
   public mockFetch(currentPage: number, callback: Function) {
     const dataArr = this.data

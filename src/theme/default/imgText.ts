@@ -25,8 +25,8 @@ export const configWrapCreate = (winWidth: number, customStyles?: any) => {
     {},
     defaultWrapConfig,
     {
-      width: winWidth,
-      height: winWidth * 100 / 320 * 33 / 50 + spacingMd + spacingSm * 4
+      width: winWidth
+      // height: winWidth * 100 / 320 * 33 / 50 + spacingMd + spacingSm * 4
     },
     customStyles
   )
@@ -85,8 +85,8 @@ export const configRightCreate = (winWidth: number, customStyles?: any) => {
     defaultRightContentConfig,
     {
       left: leftWidth + spacingMd * 2,
-      width: winWidth - 3 * spacingMd - leftWidth,
-      height: leftWidth * 33 / 50
+      width: winWidth - 3 * spacingMd - leftWidth
+      // height: leftWidth * 33 / 50
     },
     customStyles
   )
@@ -99,7 +99,7 @@ const defaultTitleWrapConfig = {
   top: spacingSm * 3 + 3,
   // left: 100 * winWidth / 320 + spacingMd * 2,
   // width: winWidth - 3 * 10 - (100 * winWidth / 320),
-  height: 40,
+  // height: 40,
   display: "inline-block",
   position: "",
   "font-size": baseFontSize,
@@ -130,7 +130,7 @@ const defaultTitleConfig = {
   top: "",
   left: "",
   // width: winWidth - 3 * 10 - (100 * winWidth / 320),
-  height: "",
+  // height: "",
   display: "inline-block",
   position: "",
   "font-size": baseFontSize,

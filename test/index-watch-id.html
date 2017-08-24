@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0">
   <style>
     #demo {
-      /*height: 600px;*/
+      height: 300px;
       overflow: auto;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
@@ -202,6 +203,7 @@ const loadOption = {
 const adApp = new InformationFlowLayoutRender(loadOption);
 const options = {
   scroll: true,
+  dom: 'demo'
 }
 adApp.init('demo', options);
 </script>

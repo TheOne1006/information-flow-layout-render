@@ -1,3 +1,4 @@
+import { IconstructorOption } from "./loadController";
 export interface IadItemModel {
     stype: number;
     title: string;
@@ -10,6 +11,11 @@ export interface IadItemModel {
     time?: string;
     type?: any;
 }
+export interface IwatchOption {
+    scroll?: boolean;
+    dom?: HTMLElement | string;
+    onEndReachedThreshold?: number;
+}
 export default class InformationFlowLayoutRender {
     static layoutType: {
         BIG_IMG: number;
@@ -21,8 +27,13 @@ export default class InformationFlowLayoutRender {
         SHOW_SRC_TIME: number;
     };
     winWidth: number;
-    constructor();
-    render(dom: string | HTMLElement, data: object[]): void;
+    loadObj: any;
+    footerDom: HTMLElement;
+    headerDom: HTMLElement;
+    constructor(loadOptions: IconstructorOption);
+    init(dom: string | HTMLElement, option?: IwatchOption): void;
+    render(dom: string | HTMLElement, data: object[], isEnd: boolean): void;
+    watchScroll(dom: string | HTMLElement | undefined, onEndReachedThreshold: number | undefined, loadFun: Function): void;
     buildDom(nodeName: string, attrs?: any, createStyles?: Function): any;
     renderBigImgItem(container: DocumentFragment, adItem: IadItemModel): DocumentFragment | undefined;
     renderImgTextItem(container: DocumentFragment, adItem: IadItemModel): DocumentFragment | undefined;
@@ -30,4 +41,6 @@ export default class InformationFlowLayoutRender {
     createLineDom(top: number, position: string): any;
     createDescDom(desc: string, top?: number, left?: number): HTMLDivElement;
     createSrcAndTimeDom(src: string, time: string, top: number, left: number, height: number): HTMLDivElement;
+    createHeader(): HTMLElement;
+    createFooter(isEnd: boolean): HTMLElement;
 }

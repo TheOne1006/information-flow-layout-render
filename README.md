@@ -2,6 +2,8 @@
 
 1. Only fit the mobile end
 2. without anything library
+3. support async fetch data
+4. support mock get more data
 
 ### Usage
 ```bash
@@ -13,12 +15,36 @@ npm install --save information-flow-layout-render
 ```js
 // in js file
 import InformationFlowLayoutRender from 'information-flow-layout-render'
-const app = new InformationFlowLayoutRender();
 /**
- * @param {string} / {HTMLElement} dom对象, 或者 唯一id   string
- * @type {array}
+ * 创建信息流 实例
+ * @param {Array} initData 初始化的数据, 在 mock状态为全部数据
+ * @param {Number} nextPage 下一页的页数, (因为initData 可能为第一页)
+ * @param {Number} pageShowNum 每页展示数量
+ * @param {Boolean} mockRemoteLoad ture: 模拟获取远程数据, false: 使用 ajax/fetch 拉取远程数据
+ * @param {Function} ajaxFetch 如果 mockRemoteLoad=false, 则必填方法, 如果 mockRemoteLoad=true 时 ajaxFetch 没有必要填写
+ * ajaxFetch({ page , success, fail })
  */
-app.render(dom , data)
+
+const app = new InformationFlowLayoutRender({
+  initData,
+  nextPage,
+  pageShowNum,
+  mockRemoteLoad,
+  ajaxFetch
+});
+
+/**
+ * @param {string} / {HTMLElement} dom对象, 或者 唯一id
+ * @param {Object} watchOptions 监听选项
+ * @param {Boolean} watchOptions.scroll 是否支持滚动加载
+ * @param {string} / { HTMLElement } watchOptions.dom 监听滚动的
+ * @param {Function} watchOptions.onEndReachedThreshold 距离底部 多少距离 执行加载
+ */
+app.init(dom, {
+  scroll,
+  dom,
+  onEndReachedThreshold
+})
 ```
 
 ```html
