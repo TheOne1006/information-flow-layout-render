@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0">
+  <style>
+    #demo {
+      /*height: 300px;*/
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+<div id="demo">
+</div>
+</body>
+<script src="./dist/information-flow-layout-render.umd.js">
+</script>
+<script>
+const mockData = [
+  {
+    "curl":"https://m.baidu.com/feed/data/videoland?vid=6708488338826425460&srchid=14dd0bfe53662fe1&src=commom",
+    "title":"印度8个月女婴成当地网红，却吓坏她父母",
+    "desc":"印度8个月女婴成当地网红，却吓坏她父母",
+   "imageUrl":"https://ss0.bdstatic.com/9bA1vGfa2gU2pMbfm9GUKT-w/timg?searchbox_feed&size=f660_370&quality=120&wh_rate=0&imgtype=0&ref=http%3A%2F%2Fwww.baidu.com&sec=0&di=99256b0d48e0a4471276d089c542bfb0&src=http%3A%2F%2Fpic.rmb.bdstatic.com%2F8ff40ee6e8ad803bcea36ab0de832618.jpg",
+   "stype":0,
+   "type":1,
+   "src":"甜食美术小站",
+   "time":"08-21",
+ },
+ {
+      "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
+      "title":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+      "desc":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+      "images": [
+        "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=617659876,629723482&fm=173&s=8582FD12C4B055824E55E8DC0300D0B2&w=218&h=146&img.JPEG",
+        "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=214596121,3856536672&fm=173&s=C5708366964F3F4D3837849B0100C093&w=218&h=146&img.JPEG",
+        "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=311504019,4091050490&fm=173&s=4D708343CF27340FE8218C8903006093&w=218&h=146&img.JPEG",
+      ],
+      "src":"雷锋网",
+      "time":"8:25",
+      "stype":2,
+      "type":1,
+  },
+  {
+       "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
+       "title":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+       "desc":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+       "images": [
+         "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=617659876,629723482&fm=173&s=8582FD12C4B055824E55E8DC0300D0B2&w=218&h=146&img.JPEG",
+         "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=214596121,3856536672&fm=173&s=C5708366964F3F4D3837849B0100C093&w=218&h=146&img.JPEG",
+         "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=311504019,4091050490&fm=173&s=4D708343CF27340FE8218C8903006093&w=218&h=146&img.JPEG",
+       ],
+       "src":"雷锋网",
+       "time":"8:25",
+       "stype":2,
+       "type":1,
+   },
+   {
+        "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
+        "title":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+        "desc":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+        "images": [
+          "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=617659876,629723482&fm=173&s=8582FD12C4B055824E55E8DC0300D0B2&w=218&h=146&img.JPEG",
+          "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=214596121,3856536672&fm=173&s=C5708366964F3F4D3837849B0100C093&w=218&h=146&img.JPEG",
+          "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=311504019,4091050490&fm=173&s=4D708343CF27340FE8218C8903006093&w=218&h=146&img.JPEG",
+        ],
+        "src":"雷锋网",
+        "time":"8:25",
+        "stype":2,
+        "type":1,
+    },
+    {
+       "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
+       "title":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+       "desc":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+       "images": [
+         "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=617659876,629723482&fm=173&s=8582FD12C4B055824E55E8DC0300D0B2&w=218&h=146&img.JPEG",
+         "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=214596121,3856536672&fm=173&s=C5708366964F3F4D3837849B0100C093&w=218&h=146&img.JPEG",
+         "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=311504019,4091050490&fm=173&s=4D708343CF27340FE8218C8903006093&w=218&h=146&img.JPEG",
+       ],
+       "src":"雷锋网",
+       "time":"8:25",
+       "stype":2,
+       "type":1,
+   },
+   {
+        "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
+        "title":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+        "desc":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+        "images": [
+          "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=617659876,629723482&fm=173&s=8582FD12C4B055824E55E8DC0300D0B2&w=218&h=146&img.JPEG",
+          "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=214596121,3856536672&fm=173&s=C5708366964F3F4D3837849B0100C093&w=218&h=146&img.JPEG",
+          "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=311504019,4091050490&fm=173&s=4D708343CF27340FE8218C8903006093&w=218&h=146&img.JPEG",
+        ],
+        "src":"雷锋网",
+        "time":"8:25",
+        "stype":2,
+        "type":1,
+    },
+    {
+         "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
+         "title":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+         "desc":"IJCAI最佳论文公布  华人斩获最佳学生论文奖！",
+         "images": [
+           "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=617659876,629723482&fm=173&s=8582FD12C4B055824E55E8DC0300D0B2&w=218&h=146&img.JPEG",
+           "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=214596121,3856536672&fm=173&s=C5708366964F3F4D3837849B0100C093&w=218&h=146&img.JPEG",
+           "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=311504019,4091050490&fm=173&s=4D708343CF27340FE8218C8903006093&w=218&h=146&img.JPEG",
+         ],
+         "src":"雷锋网",
+         "time":"8:25",
+         "stype":2,
+         "type":1,
+     },
+    {
+    "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=9568303475930136726&n_type=1&p_from=-1",
+    "title":"苹果到底用不用经常清理内存？",
+    "desc":"苹果到底用不用经常清理内存？",
+    "imageUrl":"https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=2631898717,2249541611&fm=173&s=65F23CC43AA8401FCCB7F819030050D9&w=218&h=146&img.JPEG",
+    "src":"年幼数码",
+    "time":"10:25",
+    "stype":1,
+    "type":1,
+    },
+     {
+      "curl":"https://www.theone.io",
+      "title":"便宜的女包哪里批发",
+      "desc":"便宜的女包哪里批发",
+      "imageUrl":"http://f11.baidu.com/it/u=3821166655,1696480096&fm=76",
+      "stype":1,
+      "type":0
+    },
+    {
+      "curl":"http://www.baidu.com",
+      "title":"男子买到二手车 翻开座垫后惊呆了",
+      "desc":"男子买到二手车 翻开座垫后惊呆了",
+      "images": [
+        "http://ztd00.photos.bdimg.com/ztd/w%3D350%3Bq%3D70/sign=634e23455b0fd9f9a017536c1516a517/b812c8fcc3cec3fd74b5ab4cdc88d43f8794277b.jpg",
+        "http://ztd00.photos.bdimg.com/ztd/w%3D350%3Bq%3D70/sign=84f40da154df8db1bc2e7a613918ac69/060828381f30e924600d900846086e061d95f75a.jpg",
+        "http://ztd00.photos.bdimg.com/ztd/w%3D350%3Bq%3D70/sign=74c8a7260d082838680dda1188a2d83c/8d5494eef01f3a297e42d9f79325bc315c607c04.jpg",
+      ],
+      "src":"社盲",
+      "time":"4-19",
+      "stype":2,
+      "type":1,
+    },
+    {
+    "curl":"https://so.com",
+    "title":"月嫂多少钱",
+    "desc":"目前请月嫂要多少钱",
+    "imageUrl":"http://f12.baidu.com/it/u=1452018629,1881253633&fm=76",
+    "stype":1,
+    "type":1,
+    "src":"社盲",
+    "time":"4-19",
+    },
+     {
+      "curl":"https://www.theone.io",
+      "title":"便宜的女包哪里批发",
+      "desc":"便宜的女包哪里批发",
+      "imageUrl":"http://f11.baidu.com/it/u=3821166655,1696480096&fm=76",
+      "stype":0,
+      "type":1,
+      "src":"社盲",
+      "time":"4-19",
+    },
+    {'curl':'http://v.youku.com/v_show/id_XMjk3NzY4NDgwNA==.html?spm=a2hzp.8244740.0.0','title':'1分钟就可以做出的美味营养早餐！金黄酥脆土豆饼~','desc':'','src':'优酷网','time':'2017-08','stype':0,'type':1,'imageUrl':'http://img.every117.com/2017/7/d25cec00-87cd-11e7-9fe8-7597e0d38724.png'},{'curl':'http://ent.ifeng.com/a/20170823/42969403_0.shtml','title':'《二十二》遭制作表情包：娱乐应有底线 “慰安妇”不该被消费','desc':'','src':'凤凰网','time':'2017-08','stype':1,'type':1,'imageUrl':'http://img.every117.com/2017/7/5bddc4d0-87cf-11e7-9fe8-7597e0d38724.jpg'},{'curl':'http://ent.ifeng.com/a/20170822/42969349_0.shtml','title':'吴昕主动称潘玮柏是男友 为他耗时7小时接长发','desc':'','src':'凤凰网','time':'2017-08','stype':2,'type':1,'images':['http://img.every117.com/2017/7/ab806d30-87cf-11e7-9fe8-7597e0d38724.jpg','http://img.every117.com/2017/7/ab85c460-87cf-11e7-9fe8-7597e0d38724.jpg','http://img.every117.com/2017/7/ab9fb500-87cf-11e7-9fe8-7597e0d38724.jpg']},{'curl':'http://ent.ifeng.com/a/20170823/42969518_0.shtml','title':'满文军被曝与二婚妻子离婚 经纪人：震惊，正在核实','desc':'','src':'凤凰网','time':'2017-08','stype':1,'type':1,'imageUrl':'http://img.every117.com/2017/7/4724a260-87d0-11e7-9fe8-7597e0d38724.jpg'}];
+
+const loadOption = {
+  initData: mockData,
+  nextPage: 2,
+  pageShowNum: 5,
+  mockRemoteLoad: true,
+}
+const adApp = new InformationFlowLayoutRender(loadOption);
+const options = {
+  scroll: true,
+  // dom: 'demo'
+}
+adApp.init('demo', options);
+</script>
+</html>
