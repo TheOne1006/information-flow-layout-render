@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0">
   <style>
     #demo {
-      /*height: 600px;*/
+      height: 300px;
       overflow: auto;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
@@ -126,8 +127,6 @@ const mockData = [
          "stype":2,
          "type":1,
      },
-  ];
-const data1 = [
     {
     "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=9568303475930136726&n_type=1&p_from=-1",
     "title":"苹果到底用不用经常清理内存？",
@@ -180,28 +179,18 @@ const data1 = [
       "src":"社盲",
       "time":"4-19",
     },
-  ];
-  const data2= [
     {'curl':'http://v.youku.com/v_show/id_XMjk3NzY4NDgwNA==.html?spm=a2hzp.8244740.0.0','title':'1分钟就可以做出的美味营养早餐！金黄酥脆土豆饼~','desc':'','src':'优酷网','time':'2017-08','stype':0,'type':1,'imageUrl':'http://img.every117.com/2017/7/d25cec00-87cd-11e7-9fe8-7597e0d38724.png'},{'curl':'http://ent.ifeng.com/a/20170823/42969403_0.shtml','title':'《二十二》遭制作表情包：娱乐应有底线 “慰安妇”不该被消费','desc':'','src':'凤凰网','time':'2017-08','stype':1,'type':1,'imageUrl':'http://img.every117.com/2017/7/5bddc4d0-87cf-11e7-9fe8-7597e0d38724.jpg'},{'curl':'http://ent.ifeng.com/a/20170822/42969349_0.shtml','title':'吴昕主动称潘玮柏是男友 为他耗时7小时接长发','desc':'','src':'凤凰网','time':'2017-08','stype':2,'type':1,'images':['http://img.every117.com/2017/7/ab806d30-87cf-11e7-9fe8-7597e0d38724.jpg','http://img.every117.com/2017/7/ab85c460-87cf-11e7-9fe8-7597e0d38724.jpg','http://img.every117.com/2017/7/ab9fb500-87cf-11e7-9fe8-7597e0d38724.jpg']},{'curl':'http://ent.ifeng.com/a/20170823/42969518_0.shtml','title':'满文军被曝与二婚妻子离婚 经纪人：震惊，正在核实','desc':'','src':'凤凰网','time':'2017-08','stype':1,'type':1,'imageUrl':'http://img.every117.com/2017/7/4724a260-87d0-11e7-9fe8-7597e0d38724.jpg'}];
 
 const loadOption = {
   initData: mockData,
   nextPage: 2,
   pageShowNum: 5,
-  mockRemoteLoad: false,
-  ajaxFetch: ({page, success, fail}) => {
-    if (page == 2) {
-      setTimeout(() => success(data1), 3000)
-    }
-
-    if (page == 3) {
-      setTimeout(() => success(data2), 3000)
-    }
-  }
+  mockRemoteLoad: true,
 }
 const adApp = new InformationFlowLayoutRender(loadOption);
 const options = {
   watchScroll: true,
+  watchDom: 'demo'
 }
 adApp.init('demo', options);
 </script>

@@ -45,6 +45,12 @@ export default class StyleCtrl {
         right: number;
     };
     /**
+     * 获取 dom 对象的 属性
+     * @param {object} obj  dom 对象
+     * @param {String} prop 属性名
+     */
+    static getCurrentStyle: (dom: any, prop: any) => any;
+    /**
      * 组装成单行的 style 内联字符串
      * @param  {object} styleObject 样式对象
      * @return {string}
