@@ -53,10 +53,10 @@ export default class LoadCtrl {
       callback(data)
     }
 
-    const fail = (data: any) => {
+    const fail = (err: any) => {
       this.loading = false
       this.isEnd = true
-      console.warn(data)
+      throw err
     }
 
     fetch({
@@ -89,6 +89,8 @@ export default class LoadCtrl {
     }
   }
   public mockFetchNext(callback: Function) {
+    if (this.isEnd) return
+
     const page = this.page
     this.page = page + 1
 

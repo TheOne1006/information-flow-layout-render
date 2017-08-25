@@ -272,9 +272,61 @@ describe("ads-layout test", () => {
       it("empty src", () => {
         const src = ""
         const time = "12-12"
-        const targetDom = layout.createSrcAndTimeDom()
+        const targetDom = layout.createSrcAndTimeDom(src, time)
         expect(targetDom.nodeName).toBe("DIV")
+        const children = targetDom.children
+        expect(children).toHaveLength(0)
       })
+      it("empty time", () => {
+        const src = "src"
+        const time = ""
+        const targetDom = layout.createSrcAndTimeDom(src, time)
+        expect(targetDom.nodeName).toBe("DIV")
+        const children = targetDom.children
+        expect(children).toHaveLength(0)
+      })
+    })
+    it("truthy arguments", () => {
+      const src = "src"
+      const time = "12-29"
+      const top = 10
+      const left = 10
+      const height = 20
+
+      const targetDom = layout.createSrcAndTimeDom(src, time, top, left, height)
+      expect(targetDom.nodeName).toBe("DIV")
+      const children = targetDom.children
+      expect(children).toHaveLength(2)
+
+      expect(targetDom.style.top).toBe(`${top}px`)
+      expect(targetDom.style.height).toBe(`${height}px`)
+      expect(targetDom.style["margin-top"]).toBe(`${top}px`)
+    })
+  })
+
+  describe("InformationFlowLayoutRender Fun createHeader to create a dom", () => {
+    it("render", () => {
+      const targetDom = layout.createHeader()
+      expect(targetDom.nodeName).toBe("DIV")
+      const children = targetDom.children
+      expect(children).toHaveLength(1)
+      expect(children[0].innerText).toBe("猜你喜欢")
+    })
+  })
+  describe("InformationFlowLayoutRender Fun createFooter to create a dom", () => {
+    it("argument isEnd true", () => {
+      const targetDom = layout.createFooter(true)
+      expect(targetDom.innerText).toBe("-- 加载完成 --")
+    })
+    it("argument isEnd false", () => {
+      const targetDom = layout.createFooter(false)
+      expect(targetDom.innerText).toBe("加载更多...")
+    })
+    it("just only one footer", () => {
+      const targetDom = layout.createFooter(true)
+      const targetDom2 = layout.createFooter(false)
+      expect(targetDom.innerText).toBe("加载更多...")
+      expect(targetDom2).toBe(targetDom)
     })
   })
 })
