@@ -34,17 +34,31 @@ const app = new InformationFlowLayoutRender({
 });
 
 /**
- * @param {string} / {HTMLElement} dom对象, 或者 唯一id
  * @param {Object} watchOptions 监听选项
  * @param {Boolean} watchOptions.scroll 是否支持滚动加载
  * @param {string} / { HTMLElement } watchOptions.dom 监听滚动的
- * @param {Function} watchOptions.onEndReachedThreshold 距离底部 多少距离 执行加载
+ * @param {number} watchOptions.onEndReachedThreshold 距离底部 多少px距离 执行加载, 默认 50px
  */
-app.init(dom, {
+const watchOptions = {
   scroll,
   dom,
   onEndReachedThreshold
-})
+}
+/**
+ * @param {Object} statisticOption 统计选项, 可缺省
+ * @param {string} / { number } statisticOption.sxinid 标记
+ * @param {number} delay 延迟 delay ms 执行跳转, 默认 100ms
+ */
+const statisticOption = {
+
+}
+
+/**
+ * @param {string} / {HTMLElement} dom对象, 或者 唯一id
+ * @param {Object} watchOptions 监听选项
+ * @param {Object} statisticOption 监听选项
+ */
+app.init(dom, watchOptions, statisticOption)
 ```
 
 ```html

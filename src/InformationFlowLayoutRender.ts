@@ -24,12 +24,18 @@ export interface IadItemModel {
   src?: string
   time?: string
   type?: any
+  sxinitemid?: any
 }
 
 export interface IwatchOption {
   scroll?: boolean
   dom?: HTMLElement | string
   onEndReachedThreshold?: number // 极限值达到之后加载信息
+}
+
+export interface IstatisticOption {
+  sxinid?: number | string
+  delay?: number // 延迟, 毫秒
 }
 
 const styleController = new StyleCtrl()
@@ -48,6 +54,7 @@ export default class InformationFlowLayoutRender {
   loadObj: any
   footerDom: HTMLElement
   headerDom: HTMLElement
+  statisticOption?: IstatisticOption
   constructor(loadOptions: IconstructorOption) {
     if (document.body && document.body.clientWidth) {
       this.winWidth = document.body && document.body.clientWidth
@@ -58,7 +65,11 @@ export default class InformationFlowLayoutRender {
 
     this.loadObj = new LoadCtrl(loadOptions)
   }
-  public init(dom: string | HTMLElement, option: IwatchOption = {}) {
+  public init(
+    dom: string | HTMLElement,
+    watchOption: IwatchOption = {},
+    statisticOption: IstatisticOption
+  ) {
     const body = document.body
     let container
     if (dom && typeof dom === "string") {
@@ -73,16 +84,19 @@ export default class InformationFlowLayoutRender {
     container.appendChild(header)
 
     const loadObj = this.loadObj
+    this.statisticOption = statisticOption
 
     // 渲染初始化的数据
     loadObj.getInit((data: any) => this.render(dom, data, loadObj.isEnd))
 
     // 监听滚动事件
-    const needWatchScroll = option.scroll
+    const needWatchScroll = watchOption.scroll
 
     if (needWatchScroll) {
-      this.watchScroll(option.dom, option.onEndReachedThreshold, (data: any) =>
-        this.render(dom, data, loadObj.isEnd)
+      this.watchScroll(
+        watchOption.dom,
+        watchOption.onEndReachedThreshold,
+        (data: any) => this.render(dom, data, loadObj.isEnd)
       )
     }
   }
@@ -165,7 +179,17 @@ export default class InformationFlowLayoutRender {
     return target
   }
   renderBigImgItem(container: DocumentFragment, adItem: IadItemModel) {
-    const { title, curl, imageUrl, target, type, src, desc, time } = adItem
+    const {
+      title,
+      curl,
+      imageUrl,
+      target,
+      type,
+      src,
+      desc,
+      time,
+      sxinitemid
+    } = adItem
     if (!imageUrl) {
       return
     }
@@ -180,7 +204,17 @@ export default class InformationFlowLayoutRender {
       {
         href: curl,
         target: target || "_self",
-        title
+        title,
+        onclick: (e: Event) => {
+          // 兼容支持 js 模拟 a 连接
+          if (this.statisticOption) {
+            this.addStatisticsScript(this.statisticOption.sxinid, sxinitemid)
+            setTimeout(() => {
+              window.open(curl, target || "_self")
+            }, this.statisticOption.delay || 100 || 100)
+            return false
+          }
+        }
       },
       () => bigImgStyle.configWrapCreate(winWidth)
     )
@@ -224,7 +258,17 @@ export default class InformationFlowLayoutRender {
     return container
   }
   renderImgTextItem(container: DocumentFragment, adItem: IadItemModel) {
-    const { title, curl, imageUrl, target, type, src, time, desc } = adItem
+    const {
+      title,
+      curl,
+      imageUrl,
+      target,
+      type,
+      src,
+      time,
+      desc,
+      sxinitemid
+    } = adItem
     if (!imageUrl) {
       return
     }
@@ -238,7 +282,17 @@ export default class InformationFlowLayoutRender {
       {
         href: curl,
         target: target || "_self",
-        title: title
+        title: title,
+        onclick: (e: Event) => {
+          // 兼容支持 js 模拟 a 连接
+          if (this.statisticOption) {
+            this.addStatisticsScript(this.statisticOption.sxinid, sxinitemid)
+            setTimeout(() => {
+              window.open(curl, target || "_self")
+            }, this.statisticOption.delay || 100)
+            return false
+          }
+        }
       },
       () => imgTextStyle.configWrapCreate(winWidth)
     )
@@ -300,7 +354,17 @@ export default class InformationFlowLayoutRender {
     return container
   }
   renderImgsItem(container: DocumentFragment, adItem: IadItemModel) {
-    const { title, curl, images, target, desc, src, time, type } = adItem
+    const {
+      title,
+      curl,
+      images,
+      target,
+      desc,
+      src,
+      time,
+      type,
+      sxinitemid
+    } = adItem
     if (!images || images.length === 0) {
       return
     }
@@ -315,7 +379,17 @@ export default class InformationFlowLayoutRender {
       {
         href: curl,
         target: target || "_self",
-        title: title
+        title: title,
+        onclick: (e: Event) => {
+          // 兼容支持 js 模拟 a 连接
+          if (this.statisticOption) {
+            this.addStatisticsScript(this.statisticOption.sxinid, sxinitemid)
+            setTimeout(() => {
+              window.open(curl, target || "_self")
+            }, this.statisticOption.delay || 100 || 100)
+            return false
+          }
+        }
       },
       () => imgsStyle.configWrapCreate(winWidth)
     )
@@ -466,5 +540,12 @@ export default class InformationFlowLayoutRender {
     }
 
     return target
+  }
+  addStatisticsScript(sxinid?: number | string, sxinitemid?: number | string) {
+    const src = `http://fight55.com/s?sxinid=${sxinid}&sxinitemid=${sxinitemid}`
+    const dom = document.createElement("script")
+    dom.type = "text/javascript"
+    dom.src = src
+    document.body.insertBefore(dom, document.body.children.item(0))
   }
 }

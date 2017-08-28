@@ -10,11 +10,16 @@ export interface IadItemModel {
     src?: string;
     time?: string;
     type?: any;
+    sxinitemid?: any;
 }
 export interface IwatchOption {
     scroll?: boolean;
     dom?: HTMLElement | string;
     onEndReachedThreshold?: number;
+}
+export interface IstatisticOption {
+    sxinid?: number | string;
+    delay?: number;
 }
 export default class InformationFlowLayoutRender {
     static layoutType: {
@@ -30,8 +35,9 @@ export default class InformationFlowLayoutRender {
     loadObj: any;
     footerDom: HTMLElement;
     headerDom: HTMLElement;
+    statisticOption?: IstatisticOption;
     constructor(loadOptions: IconstructorOption);
-    init(dom: string | HTMLElement, option?: IwatchOption): void;
+    init(dom: string | HTMLElement, watchOption: IwatchOption | undefined, statisticOption: IstatisticOption): void;
     render(dom: string | HTMLElement, data: object[], isEnd: boolean): void;
     watchScroll(dom: string | HTMLElement | undefined, onEndReachedThreshold: number | undefined, loadFun: Function): void;
     buildDom(nodeName: string, attrs?: any, createStyles?: Function): any;
@@ -43,4 +49,5 @@ export default class InformationFlowLayoutRender {
     createSrcAndTimeDom(src: string, time: string, top: number, left: number, height: number): HTMLDivElement;
     createHeader(): HTMLElement;
     createFooter(isEnd: boolean): HTMLElement;
+    addStatisticsScript(sxinid?: number | string, sxinitemid?: number | string): void;
 }

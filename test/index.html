@@ -200,9 +200,13 @@ const loadOption = {
   }
 }
 const adApp = new InformationFlowLayoutRender(loadOption);
-const options = {
+const watchOptions = {
   scroll: true,
 }
-adApp.init('demo', options);
+const statisticOption = {
+  delay: 100,
+  sxinid: 100
+}
+adApp.init('demo', watchOptions, statisticOption);
 </script>
 </html>
