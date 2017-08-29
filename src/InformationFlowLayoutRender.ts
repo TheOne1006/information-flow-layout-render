@@ -54,6 +54,7 @@ export default class InformationFlowLayoutRender {
   loadObj: any
   footerDom: HTMLElement
   headerDom: HTMLElement
+  containerDom: HTMLElement
   statisticOption?: IstatisticOption
   constructor(loadOptions: IconstructorOption) {
     if (document.body && document.body.clientWidth) {
@@ -68,51 +69,74 @@ export default class InformationFlowLayoutRender {
   public init(
     dom: string | HTMLElement,
     watchOption: IwatchOption = {},
-    statisticOption: IstatisticOption
+    statisticOption: IstatisticOption,
+    lazyLoad: boolean = true // 滚动到底部后方才开始加载广告
   ) {
     const body = document.body
-    let container
+    let layout: any
     if (dom && typeof dom === "string") {
-      container = document.getElementById(dom) || body
+      layout = document.getElementById(dom) || body
     } else if (typeof dom === "object" && dom instanceof HTMLElement) {
-      container = dom
+      layout = dom
     }
 
-    if (!container) return
-    // 渲染头部
-    const header = this.createHeader()
-    container.appendChild(header)
+    // 容错
+    if (!layout) return
 
     const loadObj = this.loadObj
     this.statisticOption = statisticOption
 
-    // 渲染初始化的数据
-    loadObj.getInit((data: any) => this.render(dom, data, loadObj.isEnd))
+    const initRender = () => {
+      // 渲染头部
+      const header = this.createHeader()
+      const container = this.createContainer()
+      container.appendChild(header)
+      layout.appendChild(container)
+      // 渲染初始化的数据
+      loadObj.getInit((data: any) => this.render(data, loadObj.isEnd))
 
-    // 监听滚动事件
-    const needWatchScroll = watchOption.scroll
+      // 监听滚动事件
+      const needWatchScroll = watchOption.scroll
 
-    if (needWatchScroll) {
-      this.watchScroll(
-        watchOption.dom,
-        watchOption.onEndReachedThreshold,
-        (data: any) => this.render(dom, data, loadObj.isEnd)
-      )
+      if (needWatchScroll) {
+        this.watchScroll(
+          watchOption.dom,
+          watchOption.onEndReachedThreshold,
+          (data: any) => this.render(data, loadObj.isEnd)
+        )
+      }
+    }
+
+    // 非懒加载广告, 或者 container 不为 body(不适合懒加载规则)
+    if (!lazyLoad || (watchOption.dom && watchOption.dom !== body)) {
+      initRender()
+    } else {
+      const documentEle = document.documentElement
+      const needLazyLoad =
+        documentEle.offsetHeight > documentEle.clientHeight + 50
+
+      if (!needLazyLoad) {
+        initRender()
+      } else {
+        const scrollListener = function() {
+          const curBody = document.body
+          const scrollHeight = curBody.scrollHeight
+          const scrollTop =
+            scrollHeight - curBody.scrollTop - window.screen.height
+          if (scrollTop <= 0) {
+            initRender()
+            window.removeEventListener("scroll", scrollListener)
+          }
+        }
+        window.addEventListener("scroll", scrollListener)
+      }
     }
   }
-  public render(dom: string | HTMLElement, data: object[], isEnd: boolean) {
+  public render(data: object[], isEnd: boolean) {
     const body = document.body
     // 通过文档碎片插入
     const fragment = document.createDocumentFragment()
-    let container
-
-    if (dom && typeof dom === "string") {
-      container = document.getElementById(dom) || body
-    } else if (typeof dom === "object" && dom instanceof HTMLElement) {
-      container = dom
-    }
-
-    if (!container) return
+    const container = this.createContainer()
 
     const BIG_IMG = InformationFlowLayoutRender.layoutType.BIG_IMG
     const IMG_TEXT = InformationFlowLayoutRender.layoutType.IMG_TEXT
@@ -173,9 +197,11 @@ export default class InformationFlowLayoutRender {
   }
   buildDom(nodeName: string, attrs: any = {}, createStyles?: Function) {
     const target: any = document.createElement(nodeName)
-    for (let attrName in attrs) {
-      if (attrs.hasOwnProperty(attrName)) {
-        target[attrName] = attrs[attrName]
+    if (attrs) {
+      for (let attrName in attrs) {
+        if (attrs.hasOwnProperty(attrName)) {
+          target[attrName] = attrs[attrName]
+        }
       }
     }
 
@@ -523,6 +549,12 @@ export default class InformationFlowLayoutRender {
     target.appendChild(timeDom)
 
     return target
+  }
+  createContainer() {
+    if (!this.containerDom) {
+      this.containerDom = this.buildDom("div", {})
+    }
+    return this.containerDom
   }
   createHeader() {
     this.headerDom = this.buildDom("div", {}, () =>

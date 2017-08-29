@@ -970,8 +970,9 @@ npm install --save information-flow-layout-render
  * @param {string} / {HTMLElement} dom对象, 或者 唯一id
  * @param {Object} watchOptions 监听选项
  * @param {Object} statisticOption 监听选项
+ * @param {Boolean} isLazy 惰性初始化(监听body 才能可使用)
  */</span>
-app.init(dom, watchOptions, statisticOption)
+app.init(dom, watchOptions, statisticOption, isLazy)
 </code></pre>
 			<pre><code class="lang-html"><span class="hljs-comment">&lt;!-- in html file  --&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/javascript"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/&lt;path&gt;/&lt;to&gt;/&lt;dir&gt;/information-flow-layout-render.umd.min.js"</span>&gt;</span><span class="undefined">

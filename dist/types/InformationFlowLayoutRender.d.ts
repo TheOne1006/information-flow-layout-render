@@ -35,10 +35,11 @@ export default class InformationFlowLayoutRender {
     loadObj: any;
     footerDom: HTMLElement;
     headerDom: HTMLElement;
+    containerDom: HTMLElement;
     statisticOption?: IstatisticOption;
     constructor(loadOptions: IconstructorOption);
-    init(dom: string | HTMLElement, watchOption: IwatchOption | undefined, statisticOption: IstatisticOption): void;
-    render(dom: string | HTMLElement, data: object[], isEnd: boolean): void;
+    init(dom: string | HTMLElement, watchOption: IwatchOption | undefined, statisticOption: IstatisticOption, lazyLoad?: boolean): void;
+    render(data: object[], isEnd: boolean): void;
     watchScroll(dom: string | HTMLElement | undefined, onEndReachedThreshold: number | undefined, loadFun: Function): void;
     buildDom(nodeName: string, attrs?: any, createStyles?: Function): any;
     renderBigImgItem(container: DocumentFragment, adItem: IadItemModel): DocumentFragment | undefined;
@@ -47,6 +48,7 @@ export default class InformationFlowLayoutRender {
     createLineDom(top: number, position: string): any;
     createDescDom(desc: string, top?: number, left?: number): HTMLDivElement;
     createSrcAndTimeDom(src: string, time: string, top: number, left: number, height: number): HTMLDivElement;
+    createContainer(): HTMLElement;
     createHeader(): HTMLElement;
     createFooter(isEnd: boolean): HTMLElement;
     addStatisticsScript(sxinid?: number | string, sxinitemid?: number | string): void;

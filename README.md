@@ -57,8 +57,9 @@ const statisticOption = {
  * @param {string} / {HTMLElement} dom对象, 或者 唯一id
  * @param {Object} watchOptions 监听选项
  * @param {Object} statisticOption 监听选项
+ * @param {Boolean} isLazy 惰性初始化(监听body 才能可使用)
  */
-app.init(dom, watchOptions, statisticOption)
+app.init(dom, watchOptions, statisticOption, isLazy)
 ```
 
 ```html
