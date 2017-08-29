@@ -155,12 +155,20 @@ export default class InformationFlowLayoutRender {
     }
 
     const watchHeight = watchDom.clientHeight
-    watchDom.onscroll = function(e) {
+    const scrollHandle = function() {
       const watchDomHeight = watchDom.scrollHeight
-      const scrollTop = watchDomHeight - watchDom.scrollTop - watchHeight
+      const scrollTop =
+        watchDomHeight - watchDom.scrollTop - window.screen.height
       if (scrollTop <= onEndReachedThreshold) {
         loadObj.getNext(loadFun)
       }
+    }
+    const bindDom = watchDom === document.body ? window : watchDom
+
+    if (bindDom.addEventListener) {
+      bindDom.addEventListener("scroll", scrollHandle)
+    } else {
+      bindDom.onscroll = scrollHandle
     }
   }
   buildDom(nodeName: string, attrs: any = {}, createStyles?: Function) {

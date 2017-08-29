@@ -25,6 +25,27 @@
   <p>
     <a href="index-mock-watch-id.html">模拟分页 - 监听 id 滚动</a>
   </p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
 <div id="demo">
 </div>
 </body>
@@ -191,11 +212,11 @@ const loadOption = {
   mockRemoteLoad: false,
   ajaxFetch: ({page, success, fail}) => {
     if (page == 2) {
-      setTimeout(() => success(data1), 3000)
+      setTimeout(() => success(data1), 1000)
     }
 
     if (page == 3) {
-      setTimeout(() => success(data2), 3000)
+      setTimeout(() => success(data2), 1000)
     }
   }
 }
@@ -207,6 +228,28 @@ const statisticOption = {
   delay: 100,
   sxinid: 100
 }
-adApp.init('demo', watchOptions, statisticOption);
+
+/**
+ * 滚动到底部才加载
+ */
+ const documentEle = document.documentElement;
+ const watchBodyScrollBottom = documentEle.offsetHeight > (documentEle.clientHeight + 50);
+
+ // 无需监听
+ if (!watchBodyScrollBottom) {
+   adApp.init(document.body, watchOptions, statisticOption);
+ } else {
+  const scrollListener = function() {
+    const body =  document.body;
+    const scrollHeight = body.scrollHeight;
+    const scrollTop = scrollHeight - body.scrollTop - window.screen.height;
+    if (scrollTop <= 0) {
+        adApp.init(document.body, watchOptions, statisticOption);
+        window.removeEventListener('scroll', scrollListener);
+      }
+  }
+    window.addEventListener('scroll', scrollListener);
+ }
+
 </script>
 </html>
