@@ -241,19 +241,7 @@ const statisticOption = {
 const documentEle = document.documentElement;
 const watchBodyScrollBottom = documentEle.offsetHeight > (documentEle.clientHeight + 50);
 
-if (!watchBodyScrollBottom) {
-  adApp.init(document.body, watchOptions, statisticOption);
-} else {
- const scrollListener = function() {
-   const body =  document.body;
-   const scrollHeight = body.scrollHeight;
-   const scrollTop = scrollHeight - body.scrollTop - window.screen.height;
-   if (scrollTop <= 0) {
-       adApp.init(document.body, watchOptions, statisticOption);
-       window.removeEventListener('scroll', scrollListener);
-     }
- }
-   window.addEventListener('scroll', scrollListener);
-}
+adApp.init('demo', watchOptions, statisticOption);
+
 </script>
 </html>
