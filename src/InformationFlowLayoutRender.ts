@@ -574,7 +574,7 @@ export default class InformationFlowLayoutRender {
       )
     }
     const target = this.footerDom
-    const targetText = isEnd ? "-- 加载完成 --" : "加载更多..."
+    const targetText = isEnd ? "-- 加载完成 --" : "加载中..."
     if (target.innerText !== targetText) {
       target.innerText = targetText
     }
