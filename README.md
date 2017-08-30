@@ -48,13 +48,15 @@ const watchOptions = {
  * @param {Object} statisticOption 统计选项, 可缺省
  * @param {string} / { number } statisticOption.sxinid 标记
  * @param {number} delay 延迟 delay ms 执行跳转, 默认 100ms
- * @param {string} url 统计地址 支持 正则方式
+ * @param {string} url 点击统计地址 支持 正则方式
+ * @param {string} firstRenderUrl 首次渲染统计地址 支持 正则方式
  * @param {Function} createRedirectUrl 生成重定向地址
  */
 const statisticOption = {
   sxinid,
   delay,
   url: 'http://fight55.com/s?sxinid=:sxinid&sxinitemid=:sxinitemid(.*?)',
+  firstRenderUrl: 'http://fight55.com/s?sxinid=:sxinid&show=1'
   // () => create a url string
   createRedirectUrl: function (item) {
     return 'http://every117.com/sx?q='+item.curl;

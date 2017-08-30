@@ -38,13 +38,6 @@ export interface IwatchOption {
   onEndReachedThreshold?: number // 极限值达到之后加载信息
 }
 
-export interface IstatisticOption {
-  sxinid?: number | string
-  delay?: number // 延迟, 毫秒
-  url?: string // 统计的url path like /static/:className/:id
-  createRedirectUrl?: Function // 创建重定向 url
-}
-
 const styleController = new StyleCtrl()
 
 export default class InformationFlowLayoutRender {
@@ -76,7 +69,7 @@ export default class InformationFlowLayoutRender {
   public init(
     dom: string | HTMLElement,
     watchOption: IwatchOption = {},
-    statisticOption: IstatisticOption,
+    statisticOption: IStatisticOptions,
     lazyLoad: boolean = true // 滚动到底部后方才开始加载广告
   ) {
     const body = document.body

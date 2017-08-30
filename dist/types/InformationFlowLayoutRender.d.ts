@@ -1,4 +1,5 @@
 import { IconstructorOption as ILoadOptions } from "./loadController";
+import { IconstructorOption as IStatisticOptions } from "./statisticController";
 export interface IadItemModel {
     stype: number;
     title: string;
@@ -17,12 +18,6 @@ export interface IwatchOption {
     dom?: HTMLElement | string;
     onEndReachedThreshold?: number;
 }
-export interface IstatisticOption {
-    sxinid?: number | string;
-    delay?: number;
-    url?: string;
-    createRedirectUrl?: Function;
-}
 export default class InformationFlowLayoutRender {
     static layoutType: {
         BIG_IMG: number;
@@ -40,7 +35,7 @@ export default class InformationFlowLayoutRender {
     headerDom: HTMLElement;
     containerDom: HTMLElement;
     constructor(loadOptions: ILoadOptions);
-    init(dom: string | HTMLElement, watchOption: IwatchOption | undefined, statisticOption: IstatisticOption, lazyLoad?: boolean): void;
+    init(dom: string | HTMLElement, watchOption: IwatchOption | undefined, statisticOption: IStatisticOptions, lazyLoad?: boolean): void;
     /**
      * 首次渲染
      * @param  {HTMLElement}     layout 容器对象
