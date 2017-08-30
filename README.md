@@ -55,7 +55,10 @@ const statisticOption = {
   sxinid,
   delay,
   url: 'http://fight55.com/s?sxinid=:sxinid&sxinitemid=:sxinitemid(.*?)',
-  createRedirectUrl, // () => create a url string
+  // () => create a url string
+  createRedirectUrl: function (item) {
+    return 'http://every117.com/sx?q='+item.curl;
+  },
 }
 
 /**
