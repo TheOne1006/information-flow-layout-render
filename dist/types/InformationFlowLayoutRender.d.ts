@@ -20,6 +20,7 @@ export interface IwatchOption {
 export interface IstatisticOption {
     sxinid?: number | string;
     delay?: number;
+    createRedirectUrl?: Function;
 }
 export default class InformationFlowLayoutRender {
     static layoutType: {

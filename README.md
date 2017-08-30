@@ -48,15 +48,18 @@ const watchOptions = {
  * @param {Object} statisticOption 统计选项, 可缺省
  * @param {string} / { number } statisticOption.sxinid 标记
  * @param {number} delay 延迟 delay ms 执行跳转, 默认 100ms
+ * @param {Function} createRedirectUrl 生成重定向地址
  */
 const statisticOption = {
-
+  sxinid,
+  delay,
+  createRedirectUrl, // () => create a url string
 }
 
 /**
  * @param {string} / {HTMLElement} dom对象, 或者 唯一id
  * @param {Object} watchOptions 监听选项
- * @param {Object} statisticOption 监听选项
+ * @param {Object} statisticOption 统计选项
  * @param {Boolean} isLazy 惰性初始化(监听body 才能可使用)
  */
 app.init(dom, watchOptions, statisticOption, isLazy)

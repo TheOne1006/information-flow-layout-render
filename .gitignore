@@ -8,4 +8,4 @@ coverage
 #dist
 compiled
 .awcache
-demo/
+demo

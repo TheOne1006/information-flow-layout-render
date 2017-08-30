@@ -36,6 +36,7 @@ export interface IwatchOption {
 export interface IstatisticOption {
   sxinid?: number | string
   delay?: number // 延迟, 毫秒
+  createRedirectUrl?: Function // 创建重定向 url
 }
 
 const styleController = new StyleCtrl()
@@ -227,6 +228,15 @@ export default class InformationFlowLayoutRender {
     if (!imageUrl) {
       return
     }
+    let redirectUrl = curl
+
+    if (
+      this.statisticOption &&
+      typeof this.statisticOption.createRedirectUrl === "function"
+    ) {
+      // 容错
+      redirectUrl = this.statisticOption.createRedirectUrl(adItem) || curl
+    }
 
     const winWidth = this.winWidth
 
@@ -236,7 +246,7 @@ export default class InformationFlowLayoutRender {
     const wrapDom = this.buildDom(
       "a",
       {
-        href: curl,
+        href: redirectUrl,
         target: target || "_self",
         title,
         onclick: (e: Event) => {
@@ -244,8 +254,8 @@ export default class InformationFlowLayoutRender {
           if (this.statisticOption) {
             this.addStatisticsScript(this.statisticOption.sxinid, sxinitemid)
             setTimeout(() => {
-              window.open(curl, target || "_self")
-            }, this.statisticOption.delay || 100 || 100)
+              window.open(redirectUrl, target || "_self")
+            }, this.statisticOption.delay || 100)
             return false
           }
         }
@@ -307,6 +317,16 @@ export default class InformationFlowLayoutRender {
       return
     }
 
+    let redirectUrl = curl
+
+    if (
+      this.statisticOption &&
+      typeof this.statisticOption.createRedirectUrl === "function"
+    ) {
+      // 容错
+      redirectUrl = this.statisticOption.createRedirectUrl(adItem) || curl
+    }
+
     const winWidth = this.winWidth
     /**
      * warp
@@ -314,7 +334,7 @@ export default class InformationFlowLayoutRender {
     const wrapDom = this.buildDom(
       "a",
       {
-        href: curl,
+        href: redirectUrl,
         target: target || "_self",
         title: title,
         onclick: (e: Event) => {
@@ -322,7 +342,7 @@ export default class InformationFlowLayoutRender {
           if (this.statisticOption) {
             this.addStatisticsScript(this.statisticOption.sxinid, sxinitemid)
             setTimeout(() => {
-              window.open(curl, target || "_self")
+              window.open(redirectUrl, target || "_self")
             }, this.statisticOption.delay || 100)
             return false
           }
@@ -403,6 +423,16 @@ export default class InformationFlowLayoutRender {
       return
     }
 
+    let redirectUrl = curl
+
+    if (
+      this.statisticOption &&
+      typeof this.statisticOption.createRedirectUrl === "function"
+    ) {
+      // 容错
+      redirectUrl = this.statisticOption.createRedirectUrl(adItem) || curl
+    }
+
     const winWidth = this.winWidth
 
     /**
@@ -411,7 +441,7 @@ export default class InformationFlowLayoutRender {
     const wrapDom = this.buildDom(
       "a",
       {
-        href: curl,
+        href: redirectUrl,
         target: target || "_self",
         title: title,
         onclick: (e: Event) => {
@@ -419,8 +449,8 @@ export default class InformationFlowLayoutRender {
           if (this.statisticOption) {
             this.addStatisticsScript(this.statisticOption.sxinid, sxinitemid)
             setTimeout(() => {
-              window.open(curl, target || "_self")
-            }, this.statisticOption.delay || 100 || 100)
+              window.open(redirectUrl, target || "_self")
+            }, this.statisticOption.delay || 100)
             return false
           }
         }

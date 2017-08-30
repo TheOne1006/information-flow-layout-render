@@ -226,7 +226,10 @@ const watchOptions = {
 }
 const statisticOption = {
   delay: 100,
-  sxinid: 100
+  sxinid: 100,
+  createRedirectUrl: function (item) {
+    return 'http://every117.com/sx?q='+item.curl;
+  }
 }
 
 
