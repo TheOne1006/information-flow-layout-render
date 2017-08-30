@@ -320,12 +320,12 @@ describe("ads-layout test", () => {
     })
     it("argument isEnd false", () => {
       const targetDom = layout.createFooter(false)
-      expect(targetDom.innerText).toBe("加载更多...")
+      expect(targetDom.innerText).toBe("加载中...")
     })
     it("just only one footer", () => {
       const targetDom = layout.createFooter(true)
       const targetDom2 = layout.createFooter(false)
-      expect(targetDom.innerText).toBe("加载更多...")
+      expect(targetDom.innerText).toBe("加载中...")
       expect(targetDom2).toBe(targetDom)
     })
   })
