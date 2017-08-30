@@ -60,8 +60,10 @@ const mockData = [
    "imageUrl":"https://ss0.bdstatic.com/9bA1vGfa2gU2pMbfm9GUKT-w/timg?searchbox_feed&size=f660_370&quality=120&wh_rate=0&imgtype=0&ref=http%3A%2F%2Fwww.baidu.com&sec=0&di=99256b0d48e0a4471276d089c542bfb0&src=http%3A%2F%2Fpic.rmb.bdstatic.com%2F8ff40ee6e8ad803bcea36ab0de832618.jpg",
    "stype":0,
    "type":1,
+   "target":"_target",
    "src":"甜食美术小站",
    "time":"08-21",
+   "sxinitemid": "100"
  },
  {
       "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
@@ -76,6 +78,8 @@ const mockData = [
       "time":"8:25",
       "stype":2,
       "type":1,
+      "target":"_target",
+      "sxinitemid": 99
   },
   {
        "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
@@ -227,6 +231,7 @@ const watchOptions = {
 const statisticOption = {
   delay: 100,
   sxinid: 100,
+  url: 'http://fight55.com/s?sxinid=:sxinid&sxinitemid=:sxinitemid(.*?)',
   createRedirectUrl: function (item) {
     return 'http://every117.com/sx?q='+item.curl;
   }

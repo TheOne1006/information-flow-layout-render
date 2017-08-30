@@ -48,11 +48,13 @@ const watchOptions = {
  * @param {Object} statisticOption 统计选项, 可缺省
  * @param {string} / { number } statisticOption.sxinid 标记
  * @param {number} delay 延迟 delay ms 执行跳转, 默认 100ms
+ * @param {string} url 统计地址 支持 正则方式
  * @param {Function} createRedirectUrl 生成重定向地址
  */
 const statisticOption = {
   sxinid,
   delay,
+  url: 'http://fight55.com/s?sxinid=:sxinid&sxinitemid=:sxinitemid(.*?)',
   createRedirectUrl, // () => create a url string
 }
 

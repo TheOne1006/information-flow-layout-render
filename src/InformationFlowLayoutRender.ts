@@ -2,6 +2,7 @@
 // import "core-js/fn/array.find"
 // ...
 // import "core-js/fn/array.forEach"
+import { compile as pathCompile } from "path-to-regexp"
 import StyleCtrl from "./styleController"
 import LoadCtrl, { IconstructorOption } from "./loadController"
 import createLineStyles from "./theme/default/baseLine"
@@ -36,6 +37,7 @@ export interface IwatchOption {
 export interface IstatisticOption {
   sxinid?: number | string
   delay?: number // 延迟, 毫秒
+  url?: string // 统计的url path like /static/:className/:id
   createRedirectUrl?: Function // 创建重定向 url
 }
 
@@ -612,7 +614,12 @@ export default class InformationFlowLayoutRender {
     return target
   }
   addStatisticsScript(sxinid?: number | string, sxinitemid?: number | string) {
-    const src = `http://fight55.com/s?sxinid=${sxinid}&sxinitemid=${sxinitemid}`
+    if (!this.statisticOption || !this.statisticOption.url) {
+      return
+    }
+    const toPath = pathCompile(this.statisticOption.url)
+    // const src = `http://fight55.com/s?sxinid=${sxinid}&sxinitemid=${sxinitemid}`
+    const src = toPath({ sxinid, sxinitemid })
     const dom = document.createElement("script")
     dom.type = "text/javascript"
     dom.src = src
