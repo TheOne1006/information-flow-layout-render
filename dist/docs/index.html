@@ -961,12 +961,17 @@ npm install --save information-flow-layout-render
  * @param {Object} statisticOption 统计选项, 可缺省
  * @param {string} / { number } statisticOption.sxinid 标记
  * @param {number} delay 延迟 delay ms 执行跳转, 默认 100ms
+ * @param {string} url 统计地址 支持 正则方式
  * @param {Function} createRedirectUrl 生成重定向地址
  */</span>
 <span class="hljs-keyword">const</span> statisticOption = {
   sxinid,
   delay,
-  createRedirectUrl, <span class="hljs-comment">// () =&gt; create a url string</span>
+  <span class="hljs-attr">url</span>: <span class="hljs-string">'http://fight55.com/s?sxinid=:sxinid&amp;sxinitemid=:sxinitemid(.*?)'</span>,
+  <span class="hljs-comment">// () =&gt; create a url string</span>
+  createRedirectUrl: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'http://every117.com/sx?q='</span>+item.curl;
+  },
 }
 
 <span class="hljs-comment">/**
@@ -1134,6 +1139,7 @@ semantic-release setup
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-external-module"><a href="modules/_informationflowlayoutrender_.html" class="tsd-kind-icon">"<wbr>Information<wbr>Flow<wbr>Layout<wbr>Render"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_loadcontroller_.html" class="tsd-kind-icon">"load<wbr>Controller"</a></li>
+							<li class="tsd-kind-external-module"><a href="modules/_statisticcontroller_.html" class="tsd-kind-icon">"statistic<wbr>Controller"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_stylecontroller_.html" class="tsd-kind-icon">"style<wbr>Controller"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_theme_default_baseline_.html" class="tsd-kind-icon">"theme/default/base<wbr>Line"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_theme_default_bigimg_.html" class="tsd-kind-icon">"theme/default/big<wbr>Img"</a></li>

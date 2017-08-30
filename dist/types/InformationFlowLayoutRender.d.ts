@@ -1,4 +1,4 @@
-import { IconstructorOption } from "./loadController";
+import { IconstructorOption as ILoadOptions } from "./loadController";
 export interface IadItemModel {
     stype: number;
     title: string;
@@ -35,12 +35,18 @@ export default class InformationFlowLayoutRender {
     };
     winWidth: number;
     loadObj: any;
+    statisticObj: any;
     footerDom: HTMLElement;
     headerDom: HTMLElement;
     containerDom: HTMLElement;
-    statisticOption?: IstatisticOption;
-    constructor(loadOptions: IconstructorOption);
+    constructor(loadOptions: ILoadOptions);
     init(dom: string | HTMLElement, watchOption: IwatchOption | undefined, statisticOption: IstatisticOption, lazyLoad?: boolean): void;
+    /**
+     * 首次渲染
+     * @param  {HTMLElement}     layout 容器对象
+     * @param  {IwatchOption =      {}} watchOption 监听选项
+     */
+    initRender(layout: HTMLElement, watchOption?: IwatchOption): void;
     render(data: object[], isEnd: boolean): void;
     watchScroll(dom: string | HTMLElement | undefined, onEndReachedThreshold: number | undefined, loadFun: Function): void;
     buildDom(nodeName: string, attrs?: any, createStyles?: Function): any;
@@ -53,5 +59,4 @@ export default class InformationFlowLayoutRender {
     createContainer(): HTMLElement;
     createHeader(): HTMLElement;
     createFooter(isEnd: boolean): HTMLElement;
-    addStatisticsScript(sxinid?: number | string, sxinitemid?: number | string): void;
 }

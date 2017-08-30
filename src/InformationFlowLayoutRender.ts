@@ -2,9 +2,13 @@
 // import "core-js/fn/array.find"
 // ...
 // import "core-js/fn/array.forEach"
-import { compile as pathCompile } from "path-to-regexp"
+import isEmpty from "lodash.isempty"
 import StyleCtrl from "./styleController"
-import LoadCtrl, { IconstructorOption } from "./loadController"
+import LoadCtrl, { IconstructorOption as ILoadOptions } from "./loadController"
+import StatisticCtrl, {
+  IconstructorOption as IStatisticOptions
+} from "./statisticController"
+
 import createLineStyles from "./theme/default/baseLine"
 import createDescStyles from "./theme/default/desc"
 import srcTimeStyles from "./theme/default/srcTime"
@@ -55,11 +59,11 @@ export default class InformationFlowLayoutRender {
   }
   winWidth: number
   loadObj: any
+  statisticObj: any
   footerDom: HTMLElement
   headerDom: HTMLElement
   containerDom: HTMLElement
-  statisticOption?: IstatisticOption
-  constructor(loadOptions: IconstructorOption) {
+  constructor(loadOptions: ILoadOptions) {
     if (document.body && document.body.clientWidth) {
       this.winWidth = document.body && document.body.clientWidth
     } else {
@@ -87,52 +91,70 @@ export default class InformationFlowLayoutRender {
     if (!layout) return
 
     const loadObj = this.loadObj
-    this.statisticOption = statisticOption
 
-    const initRender = () => {
-      // 渲染头部
-      const header = this.createHeader()
-      const container = this.createContainer()
-      container.appendChild(header)
-      layout.appendChild(container)
-      // 渲染初始化的数据
-      loadObj.getInit((data: any) => this.render(data, loadObj.isEnd))
-
-      // 监听滚动事件
-      const needWatchScroll = watchOption.scroll
-
-      if (needWatchScroll) {
-        this.watchScroll(
-          watchOption.dom,
-          watchOption.onEndReachedThreshold,
-          (data: any) => this.render(data, loadObj.isEnd)
-        )
-      }
+    // 检测是否开启 统计选项
+    if (!isEmpty(statisticOption)) {
+      this.statisticObj = new StatisticCtrl(statisticOption)
     }
 
+    // XXX: 优化逻辑
     // 非懒加载广告, 或者 container 不为 body(不适合懒加载规则)
     if (!lazyLoad || (watchOption.dom && watchOption.dom !== body)) {
-      initRender()
+      // 关闭懒加载
+      // 监听对象非body
+      this.initRender(layout, watchOption)
     } else {
       const documentEle = document.documentElement
       const needLazyLoad =
         documentEle.offsetHeight > documentEle.clientHeight + 50
 
       if (!needLazyLoad) {
-        initRender()
+        this.initRender(layout, watchOption)
       } else {
-        const scrollListener = function() {
+        const scrollListener = () => {
           const curBody = document.body
           const scrollHeight = curBody.scrollHeight
           const scrollTop =
             scrollHeight - curBody.scrollTop - window.screen.height
           if (scrollTop <= 0) {
-            initRender()
+            this.initRender(layout, watchOption)
             window.removeEventListener("scroll", scrollListener)
           }
         }
         window.addEventListener("scroll", scrollListener)
       }
+    }
+  }
+  /**
+   * 首次渲染
+   * @param  {HTMLElement}     layout 容器对象
+   * @param  {IwatchOption =      {}} watchOption 监听选项
+   */
+  public initRender(layout: HTMLElement, watchOption: IwatchOption = {}) {
+    // 渲染头部
+    const header = this.createHeader()
+    // 渲染
+    const container = this.createContainer()
+    container.appendChild(header)
+    layout.appendChild(container)
+    const loadObj = this.loadObj
+    // 渲染初始化的数据
+    loadObj.getInit((data: any) => this.render(data, loadObj.isEnd))
+
+    // 首次渲染统计
+    if (this.statisticObj) {
+      this.statisticObj.firstRender()
+    }
+
+    // 监听滚动事件
+    const needWatchScroll = watchOption.scroll
+
+    if (needWatchScroll) {
+      this.watchScroll(
+        watchOption.dom,
+        watchOption.onEndReachedThreshold,
+        (data: any) => this.render(data, loadObj.isEnd)
+      )
     }
   }
   public render(data: object[], isEnd: boolean) {
@@ -233,11 +255,11 @@ export default class InformationFlowLayoutRender {
     let redirectUrl = curl
 
     if (
-      this.statisticOption &&
-      typeof this.statisticOption.createRedirectUrl === "function"
+      this.statisticObj &&
+      typeof this.statisticObj.createRedirectUrl === "function"
     ) {
       // 容错
-      redirectUrl = this.statisticOption.createRedirectUrl(adItem) || curl
+      redirectUrl = this.statisticObj.createRedirectUrl(adItem) || curl
     }
 
     const winWidth = this.winWidth
@@ -253,11 +275,11 @@ export default class InformationFlowLayoutRender {
         title,
         onclick: (e: Event) => {
           // 兼容支持 js 模拟 a 连接
-          if (this.statisticOption) {
-            this.addStatisticsScript(this.statisticOption.sxinid, sxinitemid)
+          if (this.statisticObj) {
+            this.statisticObj.materielClick(sxinitemid)
             setTimeout(() => {
               window.open(redirectUrl, target || "_self")
-            }, this.statisticOption.delay || 100)
+            }, this.statisticObj.delay)
             return false
           }
         }
@@ -322,11 +344,11 @@ export default class InformationFlowLayoutRender {
     let redirectUrl = curl
 
     if (
-      this.statisticOption &&
-      typeof this.statisticOption.createRedirectUrl === "function"
+      this.statisticObj &&
+      typeof this.statisticObj.createRedirectUrl === "function"
     ) {
       // 容错
-      redirectUrl = this.statisticOption.createRedirectUrl(adItem) || curl
+      redirectUrl = this.statisticObj.createRedirectUrl(adItem) || curl
     }
 
     const winWidth = this.winWidth
@@ -341,11 +363,11 @@ export default class InformationFlowLayoutRender {
         title: title,
         onclick: (e: Event) => {
           // 兼容支持 js 模拟 a 连接
-          if (this.statisticOption) {
-            this.addStatisticsScript(this.statisticOption.sxinid, sxinitemid)
+          if (this.statisticObj) {
+            this.statisticObj.materielClick(sxinitemid)
             setTimeout(() => {
               window.open(redirectUrl, target || "_self")
-            }, this.statisticOption.delay || 100)
+            }, this.statisticObj.delay)
             return false
           }
         }
@@ -428,11 +450,11 @@ export default class InformationFlowLayoutRender {
     let redirectUrl = curl
 
     if (
-      this.statisticOption &&
-      typeof this.statisticOption.createRedirectUrl === "function"
+      this.statisticObj &&
+      typeof this.statisticObj.createRedirectUrl === "function"
     ) {
       // 容错
-      redirectUrl = this.statisticOption.createRedirectUrl(adItem) || curl
+      redirectUrl = this.statisticObj.createRedirectUrl(adItem) || curl
     }
 
     const winWidth = this.winWidth
@@ -448,11 +470,11 @@ export default class InformationFlowLayoutRender {
         title: title,
         onclick: (e: Event) => {
           // 兼容支持 js 模拟 a 连接
-          if (this.statisticOption) {
-            this.addStatisticsScript(this.statisticOption.sxinid, sxinitemid)
+          if (this.statisticObj) {
+            this.statisticObj.materielClick(sxinitemid)
             setTimeout(() => {
               window.open(redirectUrl, target || "_self")
-            }, this.statisticOption.delay || 100)
+            }, this.statisticObj.delay)
             return false
           }
         }
@@ -610,19 +632,6 @@ export default class InformationFlowLayoutRender {
     if (target.innerText !== targetText) {
       target.innerText = targetText
     }
-
     return target
-  }
-  addStatisticsScript(sxinid?: number | string, sxinitemid?: number | string) {
-    if (!this.statisticOption || !this.statisticOption.url) {
-      return
-    }
-    const toPath = pathCompile(this.statisticOption.url)
-    // const src = `http://fight55.com/s?sxinid=${sxinid}&sxinitemid=${sxinitemid}`
-    const src = toPath({ sxinid, sxinitemid })
-    const dom = document.createElement("script")
-    dom.type = "text/javascript"
-    dom.src = src
-    document.body.insertBefore(dom, document.body.children.item(0))
   }
 }

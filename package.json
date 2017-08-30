@@ -37,7 +37,8 @@
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
     "prepush": "npm run test:prod && npm run build",
-    "commitmsg": "validate-commit-msg"
+    "commitmsg": "validate-commit-msg",
+    "auto-deploy-demo": "npm run build && cp -r dist/* demo/dist/ && npm run deploy-demo"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -80,6 +81,7 @@
   "devDependencies": {
     "@types/jest": "^20.0.0",
     "@types/node": "^8.0.0",
+    "@types/lodash.isempty": "^4.4.3",
     "colors": "^1.1.2",
     "commitizen": "^2.9.6",
     "coveralls": "^2.13.1",
@@ -112,7 +114,7 @@
   },
   "dependencies": {
     "core-js": "^2.4.1",
-    "path-to-regexp": "^2.0.0",
-    "whatwg-fetch": "^2.0.3"
+    "lodash.isempty": "^4.4.0",
+    "path-to-regexp": "^2.0.0"
   }
 }
