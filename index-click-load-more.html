@@ -6,9 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0">
   <style>
     #demo {
-      height: 300px;
+      /*height: 600px;*/
       overflow: auto;
-      border: 1px solid #ccc;
     }
   </style>
 </head>
@@ -29,6 +28,27 @@
   <p>
     <a href="index-click-load-more.html">点击加载更多</a>
   </p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
+  <p>placeholder</p>
 <div id="demo">
 </div>
 </body>
@@ -43,8 +63,10 @@ const mockData = [
    "imageUrl":"https://ss0.bdstatic.com/9bA1vGfa2gU2pMbfm9GUKT-w/timg?searchbox_feed&size=f660_370&quality=120&wh_rate=0&imgtype=0&ref=http%3A%2F%2Fwww.baidu.com&sec=0&di=99256b0d48e0a4471276d089c542bfb0&src=http%3A%2F%2Fpic.rmb.bdstatic.com%2F8ff40ee6e8ad803bcea36ab0de832618.jpg",
    "stype":0,
    "type":1,
+   "target":"_target",
    "src":"甜食美术小站",
    "time":"08-21",
+   "sxinitemid": "100"
  },
  {
       "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
@@ -59,6 +81,8 @@ const mockData = [
       "time":"8:25",
       "stype":2,
       "type":1,
+      "target":"_target",
+      "sxinitemid": 99
   },
   {
        "curl":"https://feed.baidu.com/feed/data/wise/landingpage?s_type=news&dsp=wise&nid=17985094631159244735&n_type=0&p_from=-1",
@@ -195,19 +219,23 @@ const loadOption = {
   mockRemoteLoad: false,
   ajaxFetch: ({page, success, fail}) => {
     if (page == 2) {
-      setTimeout(() => success(data1), 3000)
+      setTimeout(() => success(data1), 1000)
     }
 
     if (page == 3) {
-      setTimeout(() => success(data2), 3000)
+      setTimeout(() => success(data2), 1000)
     }
   }
 }
 const adApp = new InformationFlowLayoutRender(loadOption);
-const options = {
-  scroll: true,
-  dom: 'demo'
+const watchOptions = {
+  scroll: false,
+  click: true,
 }
-adApp.init('demo', options, {}, false);
+
+
+adApp.init('demo', watchOptions);
+
+
 </script>
 </html>
