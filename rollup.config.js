@@ -17,6 +17,11 @@ export default {
 	  { dest: pkg.module, format: 'es' }
   ],
   sourceMap: true,
+  onwarn: function (warning) {
+    // https://github.com/rollup/rollup/issues/794
+    // XXX: this 未定义 不报错
+    if (warning.code === 'THIS_IS_UNDEFINED') return;
+  },
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [],
   plugins: [

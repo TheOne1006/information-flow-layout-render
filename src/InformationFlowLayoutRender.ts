@@ -17,34 +17,25 @@ import imgTextStyle from "./theme/default/imgText"
 import imgsStyle from "./theme/default/imgs"
 import footerStyle from "./theme/default/footer"
 import headerStyle from "./theme/default/header"
-
-export interface IadItemModel {
-  stype: number
-  title: string
-  curl: string
-  target?: string
-  imageUrl?: string
-  images?: string[]
-  desc?: string
-  src?: string
-  time?: string
-  type?: any
-  sxinitemid?: any
-}
+import { IadItemModel } from "./interfaces"
+import VideoSection from "./videoSection"
 
 export interface IwatchOption {
   scroll?: boolean
+  click?: boolean
   dom?: HTMLElement | string
   onEndReachedThreshold?: number // 极限值达到之后加载信息
 }
 
 const styleController = new StyleCtrl()
+const videoSectioner = new VideoSection()
 
 export default class InformationFlowLayoutRender {
   static layoutType = {
     BIG_IMG: 0, // 全文大图
     IMG_TEXT: 1, // 左侧1张图, 右侧内容
-    IMGS: 2 // 多图模式
+    IMGS: 2, // 多图模式
+    VIDEO: 3 // 视频模式
   }
   static remarkType = {
     SHOW_DESC: 0,
@@ -132,7 +123,9 @@ export default class InformationFlowLayoutRender {
     layout.appendChild(container)
     const loadObj = this.loadObj
     // 渲染初始化的数据
-    loadObj.getInit((data: any) => this.render(data, loadObj.isEnd))
+    loadObj.getInit((data: any) =>
+      this.render(data, loadObj.isEnd, loadObj.loading)
+    )
 
     // 首次渲染统计
     if (this.statisticObj) {
@@ -146,11 +139,19 @@ export default class InformationFlowLayoutRender {
       this.watchScroll(
         watchOption.dom,
         watchOption.onEndReachedThreshold,
-        (data: any) => this.render(data, loadObj.isEnd)
+        (data: any) => this.render(data, loadObj.isEnd, loadObj.loading)
+      )
+    }
+
+    // 监听点击事件
+
+    if (watchOption && watchOption.click) {
+      this.watchLoadMoreBtn((data: any) =>
+        this.render(data, loadObj.isEnd, loadObj.loading)
       )
     }
   }
-  public render(data: object[], isEnd: boolean) {
+  public render(data: object[], isEnd: boolean, isLoading: boolean) {
     const body = document.body
     // 通过文档碎片插入
     const fragment = document.createDocumentFragment()
@@ -159,6 +160,7 @@ export default class InformationFlowLayoutRender {
     const BIG_IMG = InformationFlowLayoutRender.layoutType.BIG_IMG
     const IMG_TEXT = InformationFlowLayoutRender.layoutType.IMG_TEXT
     const IMGS = InformationFlowLayoutRender.layoutType.IMGS
+    const VIDEO = InformationFlowLayoutRender.layoutType.VIDEO
 
     data.forEach((item: IadItemModel) => {
       switch (item.stype) {
@@ -171,12 +173,15 @@ export default class InformationFlowLayoutRender {
         case IMGS:
           this.renderImgsItem(fragment, item)
           break
+        case VIDEO:
+          videoSectioner.render(fragment, this.winWidth, item)
+          break
         default:
           return
       }
     })
     // 底部加载信息
-    const footer = this.createFooter(isEnd)
+    const footer = this.createFooter(isEnd, isLoading)
     fragment.appendChild(footer)
 
     container.appendChild(fragment)
@@ -211,6 +216,20 @@ export default class InformationFlowLayoutRender {
       bindDom.addEventListener("scroll", scrollHandle)
     } else {
       bindDom.onscroll = scrollHandle
+    }
+  }
+  public watchLoadMoreBtn(loadFun: Function) {
+    const loadObj = this.loadObj
+    const footer = this.createFooter(loadObj.isEnd, loadObj.loading)
+
+    const clickHandle = function() {
+      loadObj.getNext(loadFun)
+    }
+
+    if (footer.addEventListener) {
+      footer.addEventListener("click", () => clickHandle())
+    } else {
+      footer.onclick = () => clickHandle()
     }
   }
   buildDom(nodeName: string, attrs: any = {}, createStyles?: Function) {
@@ -614,14 +633,16 @@ export default class InformationFlowLayoutRender {
     this.headerDom.appendChild(title)
     return this.headerDom
   }
-  createFooter(isEnd: boolean) {
+  createFooter(isEnd: boolean, isLoading: boolean) {
     if (!this.footerDom) {
       this.footerDom = this.buildDom("div", {}, () =>
         footerStyle.configWrapCreate(this.winWidth)
       )
     }
     const target = this.footerDom
-    const targetText = isEnd ? "-- 加载完成 --" : "加载中..."
+
+    const targetText = isEnd ? "-- 加载完成 --" : isLoading ? "加载中..." : "加载更多"
+
     if (target.innerText !== targetText) {
       target.innerText = targetText
     }
