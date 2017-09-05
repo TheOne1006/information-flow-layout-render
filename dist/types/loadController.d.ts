@@ -13,6 +13,7 @@ export default class LoadCtrl {
     isEnd: boolean;
     data: object[];
     ajaxFetch: Function;
+    events: any;
     constructor({initData, nextPage, pageShowNum, mockRemoteLoad, ajaxFetch}: IconstructorOption);
     fetchData(page: number, callback: Function): void;
     fetchNext(callback: Function): void;
@@ -20,4 +21,6 @@ export default class LoadCtrl {
     mockFetchNext(callback: Function): void;
     getInit(callback: Function): void;
     getNext(callback: Function): void;
+    subscribe(key: string, fn: Function): void;
+    publish(key: string, ...otherArgs: any[]): false | undefined;
 }

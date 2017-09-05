@@ -1,6 +1,6 @@
-import { IconstructorOption as ILoadOptions } from "./loadController";
-import { IconstructorOption as IStatisticOptions } from "./statisticController";
 import { IadItemModel } from "./interfaces";
+import { IconstructorOption as IStatisticOptions } from "./statisticController";
+import { IconstructorOption as ILoadOptions } from "./loadController";
 export interface IwatchOption {
     scroll?: boolean;
     click?: boolean;
@@ -8,16 +8,6 @@ export interface IwatchOption {
     onEndReachedThreshold?: number;
 }
 export default class InformationFlowLayoutRender {
-    static layoutType: {
-        BIG_IMG: number;
-        IMG_TEXT: number;
-        IMGS: number;
-        VIDEO: number;
-    };
-    static remarkType: {
-        SHOW_DESC: number;
-        SHOW_SRC_TIME: number;
-    };
     winWidth: number;
     loadObj: any;
     statisticObj: any;
@@ -32,17 +22,11 @@ export default class InformationFlowLayoutRender {
      * @param  {IwatchOption =      {}} watchOption 监听选项
      */
     initRender(layout: HTMLElement, watchOption?: IwatchOption): void;
-    render(data: object[], isEnd: boolean, isLoading: boolean): void;
+    render(data: object[]): void;
     watchScroll(dom: string | HTMLElement | undefined, onEndReachedThreshold: number | undefined, loadFun: Function): void;
     watchLoadMoreBtn(loadFun: Function): void;
-    buildDom(nodeName: string, attrs?: any, createStyles?: Function): any;
-    renderBigImgItem(container: DocumentFragment, adItem: IadItemModel): DocumentFragment | undefined;
-    renderImgTextItem(container: DocumentFragment, adItem: IadItemModel): DocumentFragment | undefined;
-    renderImgsItem(container: DocumentFragment, adItem: IadItemModel): DocumentFragment | undefined;
-    createLineDom(top: number, position: string): any;
-    createDescDom(desc: string, top?: number, left?: number): HTMLDivElement;
-    createSrcAndTimeDom(src: string, time: string, top: number, left: number, height: number): HTMLDivElement;
-    createContainer(): HTMLElement;
-    createHeader(): HTMLElement;
-    createFooter(isEnd: boolean, isLoading: boolean): HTMLElement;
+    renderBigImgItem(container: DocumentFragment, adItem: IadItemModel): void;
+    renderImgTextItem(container: DocumentFragment, adItem: IadItemModel): void;
+    renderImgsItem(container: DocumentFragment, adItem: IadItemModel): void;
+    footer(isEnd?: boolean, isLoading?: boolean): HTMLElement;
 }

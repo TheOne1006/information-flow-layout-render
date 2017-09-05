@@ -3,22 +3,22 @@
 // ...
 // import "core-js/fn/array.forEach"
 import isEmpty from "lodash.isempty"
-import StyleCtrl from "./styleController"
-import LoadCtrl, { IconstructorOption as ILoadOptions } from "./loadController"
+
+import { IadItemModel } from "./interfaces"
+
+import { layoutType } from "./constants"
+
 import StatisticCtrl, {
   IconstructorOption as IStatisticOptions
 } from "./statisticController"
 
-import createLineStyles from "./theme/default/baseLine"
-import createDescStyles from "./theme/default/desc"
-import srcTimeStyles from "./theme/default/srcTime"
-import bigImgStyle from "./theme/default/bigImg"
-import imgTextStyle from "./theme/default/imgText"
-import imgsStyle from "./theme/default/imgs"
-import footerStyle from "./theme/default/footer"
-import headerStyle from "./theme/default/header"
-import { IadItemModel } from "./interfaces"
-import VideoSection from "./videoSection"
+import LoadCtrl, { IconstructorOption as ILoadOptions } from "./loadController"
+
+import BigImgSection from "./sections/bigImgSection"
+import ImgsSection from "./sections/imgsSection"
+import ImgTextSection from "./sections/imgTextSection"
+import LayoutsSection from "./sections/layoutSections"
+import VideoSection from "./sections/videoSection"
 
 export interface IwatchOption {
   scroll?: boolean
@@ -27,20 +27,13 @@ export interface IwatchOption {
   onEndReachedThreshold?: number // 极限值达到之后加载信息
 }
 
-const styleController = new StyleCtrl()
 const videoSectioner = new VideoSection()
+const imgTextSectioner = new ImgTextSection()
+const bigImgSectioner = new BigImgSection()
+const imgsSectioner = new ImgsSection()
+const layoutsSectioner = new LayoutsSection()
 
 export default class InformationFlowLayoutRender {
-  static layoutType = {
-    BIG_IMG: 0, // 全文大图
-    IMG_TEXT: 1, // 左侧1张图, 右侧内容
-    IMGS: 2, // 多图模式
-    VIDEO: 3 // 视频模式
-  }
-  static remarkType = {
-    SHOW_DESC: 0,
-    SHOW_SRC_TIME: 1
-  }
   winWidth: number
   loadObj: any
   statisticObj: any
@@ -56,6 +49,16 @@ export default class InformationFlowLayoutRender {
     }
 
     this.loadObj = new LoadCtrl(loadOptions)
+
+    this.loadObj.subscribe("fetch-begin", () => {
+      this.footer(this.loadObj.isEnd, this.loadObj.loading)
+    })
+    this.loadObj.subscribe("fetch-success", () => {
+      this.footer(this.loadObj.isEnd, this.loadObj.loading)
+    })
+    this.loadObj.subscribe("fetch-fail", () => {
+      this.footer(this.loadObj.isEnd, this.loadObj.loading)
+    })
   }
   public init(
     dom: string | HTMLElement,
@@ -80,6 +83,12 @@ export default class InformationFlowLayoutRender {
     if (!isEmpty(statisticOption)) {
       this.statisticObj = new StatisticCtrl(statisticOption)
     }
+
+    // 初始化属性
+    this.headerDom = layoutsSectioner.createHeader(this.winWidth)
+    this.footerDom = layoutsSectioner.createFooter(this.winWidth)
+    this.footer(loadObj.isEnd, loadObj.loading)
+    this.containerDom = layoutsSectioner.createrContainer()
 
     // XXX: 优化逻辑
     // 非懒加载广告, 或者 container 不为 body(不适合懒加载规则)
@@ -116,16 +125,14 @@ export default class InformationFlowLayoutRender {
    */
   public initRender(layout: HTMLElement, watchOption: IwatchOption = {}) {
     // 渲染头部
-    const header = this.createHeader()
+    const header = this.headerDom
     // 渲染
-    const container = this.createContainer()
+    const container = this.containerDom
     container.appendChild(header)
     layout.appendChild(container)
     const loadObj = this.loadObj
     // 渲染初始化的数据
-    loadObj.getInit((data: any) =>
-      this.render(data, loadObj.isEnd, loadObj.loading)
-    )
+    loadObj.getInit((data: any) => this.render(data))
 
     // 首次渲染统计
     if (this.statisticObj) {
@@ -139,28 +146,26 @@ export default class InformationFlowLayoutRender {
       this.watchScroll(
         watchOption.dom,
         watchOption.onEndReachedThreshold,
-        (data: any) => this.render(data, loadObj.isEnd, loadObj.loading)
+        (data: any) => this.render(data)
       )
     }
 
     // 监听点击事件
 
     if (watchOption && watchOption.click) {
-      this.watchLoadMoreBtn((data: any) =>
-        this.render(data, loadObj.isEnd, loadObj.loading)
-      )
+      this.watchLoadMoreBtn((data: any) => this.render(data))
     }
   }
-  public render(data: object[], isEnd: boolean, isLoading: boolean) {
+  public render(data: object[]) {
     const body = document.body
     // 通过文档碎片插入
     const fragment = document.createDocumentFragment()
-    const container = this.createContainer()
+    const container = this.containerDom
 
-    const BIG_IMG = InformationFlowLayoutRender.layoutType.BIG_IMG
-    const IMG_TEXT = InformationFlowLayoutRender.layoutType.IMG_TEXT
-    const IMGS = InformationFlowLayoutRender.layoutType.IMGS
-    const VIDEO = InformationFlowLayoutRender.layoutType.VIDEO
+    const BIG_IMG = layoutType.BIG_IMG
+    const IMG_TEXT = layoutType.IMG_TEXT
+    const IMGS = layoutType.IMGS
+    const VIDEO = layoutType.VIDEO
 
     data.forEach((item: IadItemModel) => {
       switch (item.stype) {
@@ -181,7 +186,7 @@ export default class InformationFlowLayoutRender {
       }
     })
     // 底部加载信息
-    const footer = this.createFooter(isEnd, isLoading)
+    const footer = this.footer()
     fragment.appendChild(footer)
 
     container.appendChild(fragment)
@@ -220,7 +225,7 @@ export default class InformationFlowLayoutRender {
   }
   public watchLoadMoreBtn(loadFun: Function) {
     const loadObj = this.loadObj
-    const footer = this.createFooter(loadObj.isEnd, loadObj.loading)
+    const footer = this.footer()
 
     const clickHandle = function() {
       loadObj.getNext(loadFun)
@@ -232,38 +237,13 @@ export default class InformationFlowLayoutRender {
       footer.onclick = () => clickHandle()
     }
   }
-  buildDom(nodeName: string, attrs: any = {}, createStyles?: Function) {
-    const target: any = document.createElement(nodeName)
-    if (attrs) {
-      for (let attrName in attrs) {
-        if (attrs.hasOwnProperty(attrName)) {
-          target[attrName] = attrs[attrName]
-        }
-      }
-    }
-
-    if (createStyles) {
-      const styles = createStyles()
-      styleController.appendStyle(target, styles)
-    }
-
-    return target
-  }
   renderBigImgItem(container: DocumentFragment, adItem: IadItemModel) {
-    const {
-      title,
-      curl,
-      imageUrl,
-      target,
-      type,
-      src,
-      desc,
-      time,
-      sxinitemid
-    } = adItem
+    const { imageUrl, curl, target, sxinitemid } = adItem
+
     if (!imageUrl) {
       return
     }
+
     let redirectUrl = curl
 
     if (
@@ -274,68 +254,23 @@ export default class InformationFlowLayoutRender {
       redirectUrl = this.statisticObj.createRedirectUrl(adItem) || curl
     }
 
-    const winWidth = this.winWidth
-
-    /**
-     * 创建基础 wrap dom
-     */
-    const wrapDom = this.buildDom(
-      "a",
-      {
-        href: redirectUrl,
-        target: target || "_self",
-        title,
-        onclick: (e: Event) => {
-          // 兼容支持 js 模拟 a 连接
-          if (this.statisticObj) {
-            this.statisticObj.materielClick(sxinitemid)
-            setTimeout(() => {
-              window.open(redirectUrl, target || "_self")
-            }, this.statisticObj.delay)
-            return false
-          }
-        }
-      },
-      () => bigImgStyle.configWrapCreate(winWidth)
-    )
-
-    /**
-     * title Dom
-     */
-    const titleDom = this.buildDom(
-      "span",
-      {
-        innerHTML: title
-      },
-      () => bigImgStyle.configTitleContainerCreate(winWidth)
-    )
-    wrapDom.appendChild(titleDom)
-
-    // img container
-    const imgContentDom = this.buildDom("div", {}, () =>
-      bigImgStyle.configImgContainerCreate(winWidth)
-    )
-    imgContentDom.style.background = `url(${imageUrl}) center center no-repeat`
-    imgContentDom.style.backgroundSize = "cover"
-
-    wrapDom.appendChild(imgContentDom)
-
-    if (type === InformationFlowLayoutRender.remarkType.SHOW_DESC && desc) {
-      const descDom = this.createDescDom(desc, 10, 10)
-      wrapDom.appendChild(descDom)
-    } else if (
-      type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME &&
-      src &&
-      time
-    ) {
-      const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 10, 10, 20)
-      wrapDom.appendChild(srcAndTimeDom)
+    const touchCallback = () => {
+      if (this.statisticObj) {
+        this.statisticObj.materielClick(sxinitemid)
+        setTimeout(() => {
+          window.open(redirectUrl, target || "_target")
+        }, this.statisticObj.delay)
+        return false
+      }
     }
 
-    const lineDom = this.createLineDom(0, "")
-    wrapDom.appendChild(lineDom)
-    container.appendChild(wrapDom)
-    return container
+    bigImgSectioner.render(
+      container,
+      this.winWidth,
+      adItem,
+      redirectUrl,
+      touchCallback
+    )
   }
   renderImgTextItem(container: DocumentFragment, adItem: IadItemModel) {
     const {
@@ -364,84 +299,24 @@ export default class InformationFlowLayoutRender {
     }
 
     const winWidth = this.winWidth
-    /**
-     * warp
-     */
-    const wrapDom = this.buildDom(
-      "a",
-      {
-        href: redirectUrl,
-        target: target || "_self",
-        title: title,
-        onclick: (e: Event) => {
-          // 兼容支持 js 模拟 a 连接
-          if (this.statisticObj) {
-            this.statisticObj.materielClick(sxinitemid)
-            setTimeout(() => {
-              window.open(redirectUrl, target || "_self")
-            }, this.statisticObj.delay)
-            return false
-          }
-        }
-      },
-      () => imgTextStyle.configWrapCreate(winWidth)
-    )
 
-    /**
-     * 左侧图片
-     */
-    const imgDom = this.buildDom("div", {}, () =>
-      imgTextStyle.configImgCreate(winWidth)
-    )
-    imgDom.style.background = `url(${imageUrl}) center center no-repeat`
-    imgDom.style.backgroundSize = "cover"
-
-    wrapDom.appendChild(imgDom)
-
-    /**
-     * 右侧内容
-     */
-    const rightContent = this.buildDom("div", {}, () =>
-      imgTextStyle.configRightCreate(winWidth)
-    )
-
-    /**
-     * title 相关
-     */
-    const titleWrapDom = this.buildDom("div", {}, () =>
-      imgTextStyle.configTitleWrapCreate(winWidth)
-    )
-
-    const titleDom = this.buildDom(
-      "span",
-      {
-        innerText: title
-      },
-      () => imgTextStyle.configTitleCreate(winWidth)
-    )
-
-    titleWrapDom.appendChild(titleDom)
-    rightContent.appendChild(titleWrapDom)
-
-    if (type === InformationFlowLayoutRender.remarkType.SHOW_DESC && desc) {
-      const descDom = this.createDescDom(desc, 10, 0)
-      rightContent.appendChild(descDom)
-    } else if (
-      type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME &&
-      src &&
-      time
-    ) {
-      const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 5, 0, 20)
-      rightContent.appendChild(srcAndTimeDom)
+    const touchCallback = () => {
+      if (this.statisticObj) {
+        this.statisticObj.materielClick(sxinitemid)
+        setTimeout(() => {
+          window.open(redirectUrl, target || "_target")
+        }, this.statisticObj.delay)
+        return false
+      }
     }
 
-    wrapDom.appendChild(rightContent)
-
-    const lineDom = this.createLineDom(13, "")
-    wrapDom.appendChild(lineDom)
-
-    container.appendChild(wrapDom)
-    return container
+    imgTextSectioner.render(
+      container,
+      winWidth,
+      adItem,
+      redirectUrl,
+      touchCallback
+    )
   }
   renderImgsItem(container: DocumentFragment, adItem: IadItemModel) {
     const {
@@ -471,175 +346,31 @@ export default class InformationFlowLayoutRender {
 
     const winWidth = this.winWidth
 
-    /**
-     * 创建基础 wrap dom
-     */
-    const wrapDom = this.buildDom(
-      "a",
-      {
-        href: redirectUrl,
-        target: target || "_self",
-        title: title,
-        onclick: (e: Event) => {
-          // 兼容支持 js 模拟 a 连接
-          if (this.statisticObj) {
-            this.statisticObj.materielClick(sxinitemid)
-            setTimeout(() => {
-              window.open(redirectUrl, target || "_self")
-            }, this.statisticObj.delay)
-            return false
-          }
-        }
-      },
-      () => imgsStyle.configWrapCreate(winWidth)
-    )
-
-    /**
-     * title
-     */
-    const titleDom = this.buildDom(
-      "span",
-      {
-        innerText: title
-      },
-      () => imgsStyle.configTitleCreate(winWidth)
-    )
-    wrapDom.appendChild(titleDom)
-
-    /**
-     * content imgs
-     */
-    const imgLen = images.length
-    for (let i = 0; i < imgLen; i++) {
-      const curImg = images[i]
-
-      const customStyle: any = {}
-
-      if (i !== 0) {
-        customStyle["margin-left"] = "3px"
+    const touchCallback = () => {
+      if (this.statisticObj) {
+        this.statisticObj.materielClick(sxinitemid)
+        setTimeout(() => {
+          window.open(redirectUrl, target || "_target")
+        }, this.statisticObj.delay)
+        return false
       }
-
-      const imgItem = this.buildDom("div", {}, () =>
-        imgsStyle.configImgItemCreate(winWidth, customStyle, imgLen)
-      )
-      imgItem.style.background = `url(${curImg}) center center no-repeat`
-      imgItem.style.backgroundSize = "cover"
-
-      wrapDom.appendChild(imgItem)
     }
 
-    if (type === InformationFlowLayoutRender.remarkType.SHOW_DESC && desc) {
-      const descDom = this.createDescDom(desc, 0, 10)
-      wrapDom.appendChild(descDom)
-    } else if (
-      type === InformationFlowLayoutRender.remarkType.SHOW_SRC_TIME &&
-      src &&
-      time
-    ) {
-      const srcAndTimeDom = this.createSrcAndTimeDom(src, time, 0, 10, 20)
-      wrapDom.appendChild(srcAndTimeDom)
-    }
-
-    const lineDom = this.createLineDom(0, "")
-    wrapDom.appendChild(lineDom)
-
-    container.appendChild(wrapDom)
-    return container
-  }
-  createLineDom(top: number, position: string) {
-    const lineDom = this.buildDom("div", {}, () =>
-      createLineStyles(this.winWidth, {
-        top,
-        position
-      })
+    imgsSectioner.render(
+      container,
+      winWidth,
+      adItem,
+      redirectUrl,
+      touchCallback
     )
-
-    return lineDom
   }
-  createDescDom(desc: string, top: number = 0, left: number = 0) {
-    const target = document.createElement("div")
-    if (!desc) {
-      return target
-    }
-    target.innerText = desc
-
-    const descStyles = createDescStyles(this.winWidth, {
-      top,
-      left,
-      "margin-top": top,
-      "margin-left": left
-    })
-
-    styleController.appendStyle(target, descStyles)
-
-    return target
-  }
-  createSrcAndTimeDom(
-    src: string,
-    time: string,
-    top: number,
-    left: number,
-    height: number
-  ) {
-    const target = document.createElement("div")
-    if (!src || !time) {
-      return target
-    }
-
-    const customStyles = {
-      top,
-      left,
-      height,
-      "margin-left": left,
-      "margin-top": top
-    }
-
-    const wrapStyles = srcTimeStyles.configWrapCreate(
-      this.winWidth,
-      customStyles
-    )
-    styleController.appendStyle(target, wrapStyles)
-
-    const srcDom = document.createElement("div")
-    const itemStyles = srcTimeStyles.configItemCreate(this.winWidth, {
-      "line-height": height
-    })
-    srcDom.innerText = src
-    styleController.appendStyle(srcDom, itemStyles)
-
-    const timeDom = document.createElement("div")
-    timeDom.innerText = time
-    styleController.appendStyle(timeDom, itemStyles)
-
-    target.appendChild(srcDom)
-    target.appendChild(timeDom)
-
-    return target
-  }
-  createContainer() {
-    if (!this.containerDom) {
-      this.containerDom = this.buildDom("div", {})
-    }
-    return this.containerDom
-  }
-  createHeader() {
-    this.headerDom = this.buildDom("div", {}, () =>
-      headerStyle.configWrapCreate(this.winWidth)
-    )
-    const title = this.buildDom("div", {}, () =>
-      headerStyle.configTitleCreate(this.winWidth)
-    )
-    title.innerText = "猜你喜欢"
-    this.headerDom.appendChild(title)
-    return this.headerDom
-  }
-  createFooter(isEnd: boolean, isLoading: boolean) {
-    if (!this.footerDom) {
-      this.footerDom = this.buildDom("div", {}, () =>
-        footerStyle.configWrapCreate(this.winWidth)
-      )
-    }
+  // getter & setter
+  footer(isEnd?: boolean, isLoading?: boolean) {
     const target = this.footerDom
+
+    if (typeof isEnd === "undefined" && typeof isLoading === "undefined") {
+      return target
+    }
 
     const targetText = isEnd ? "-- 加载完成 --" : isLoading ? "加载中..." : "加载更多"
 

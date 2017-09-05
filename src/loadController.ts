@@ -17,6 +17,7 @@ export default class LoadCtrl {
   isEnd: boolean
   data: object[]
   ajaxFetch: Function
+  events: any = {}
   constructor({
     initData = [],
     nextPage = DEFAULT_PAGE_NUM,
@@ -43,6 +44,7 @@ export default class LoadCtrl {
 
     this.loading = true
     const fetch = this.ajaxFetch
+    this.publish("fetch-begin")
 
     const success = (data: object[]) => {
       this.loading = false
@@ -50,12 +52,14 @@ export default class LoadCtrl {
       if (this.showNum > data.length) {
         this.isEnd = true
       }
+      this.publish("fetch-success")
       callback(data)
     }
 
     const fail = (err: any) => {
       this.loading = false
       this.isEnd = true
+      this.publish("fetch-fail")
       throw err
     }
 
@@ -110,6 +114,23 @@ export default class LoadCtrl {
       this.mockFetchNext(callback)
     } else {
       this.fetchNext(callback)
+    }
+  }
+  public subscribe(key: string, fn: Function) {
+    if (!this.events[key]) {
+      this.events[key] = []
+    }
+    this.events[key].push(fn)
+  }
+  public publish(key: string, ...otherArgs: any[]) {
+    const fns = this.events.hasOwnProperty(key) ? this.events[key] : []
+
+    if (!fns || fns.length === 0) {
+      return false
+    }
+    for (let i = 0; i < fns.length; i++) {
+      const fn = fns[i]
+      fn.apply(this, otherArgs)
     }
   }
 }
