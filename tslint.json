@@ -4,7 +4,8 @@
     "tslint-config-prettier"
   ],
   "rules": {
-    "member-ordering": [true,
+    "member-ordering": [
+      true,
       "public-before-private",
       "static-before-instance",
       "variables-before-functions"
@@ -16,6 +17,13 @@
     "semicolon": [
         true,
         "never"
-    ]
+    ],
+    "ordered-imports": {
+        "options": {
+            "import-sources-order": "case-insensitive",
+            "named-imports-order": "case-insensitive"
+        }
+    },
+    "no-unused-variable": true
   }
 }

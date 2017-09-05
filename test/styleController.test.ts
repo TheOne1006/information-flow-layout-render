@@ -1,5 +1,5 @@
-import StyleCtrl from "../src/styleController"
 import {} from "jest"
+import StyleCtrl from "../src/styleController"
 
 describe("style-controller test", () => {
   it("protected func genStyle return a empty", () => {

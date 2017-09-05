@@ -1,5 +1,5 @@
-import LoadCtrl from "../src/loadController"
 import {} from "jest"
+import LoadCtrl from "../src/loadController"
 
 describe("load-controller test", () => {
   let ctrl
