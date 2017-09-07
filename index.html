@@ -254,7 +254,7 @@ const statisticOption = {
   sxinid: 100,
   url: 'http://fight55.com/s?sxinid=:sxinid&sxinitemid=:sxinitemid(.*?)',
   createRedirectUrl: function (item) {
-    return 'http://every117.com/sx?q='+item.curl;
+    return 'http://every117.com/sx?q='+encodeURIComponent(item.curl);
   }
 }
 
