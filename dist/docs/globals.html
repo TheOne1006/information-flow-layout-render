@@ -949,11 +949,13 @@ npm install --save information-flow-layout-render
 <span class="hljs-comment">/**
  * @param {Object} watchOptions 监听选项
  * @param {Boolean} watchOptions.scroll 是否支持滚动加载
+ * @param {Boolean} watchOptions.click 是否支持点击加载
  * @param {string} / { HTMLElement } watchOptions.dom 监听滚动的
  * @param {number} watchOptions.onEndReachedThreshold 距离底部 多少px距离 执行加载, 默认 50px
  */</span>
 <span class="hljs-keyword">const</span> watchOptions = {
   scroll,
+  click,
   dom,
   onEndReachedThreshold
 }
@@ -1140,6 +1142,7 @@ semantic-release setup
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-external-module"><a href="modules/_informationflowlayoutrender_.html" class="tsd-kind-icon">"<wbr>Information<wbr>Flow<wbr>Layout<wbr>Render"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_constants_.html" class="tsd-kind-icon">"constants"</a></li>
+							<li class="tsd-kind-external-module"><a href="modules/_help_.html" class="tsd-kind-icon">"help"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_interfaces_.html" class="tsd-kind-icon">"interfaces"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_loadcontroller_.html" class="tsd-kind-icon">"load<wbr>Controller"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_sections_basesection_.html" class="tsd-kind-icon">"sections/base<wbr>Section"</a></li>
