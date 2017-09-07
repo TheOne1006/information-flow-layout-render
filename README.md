@@ -36,11 +36,13 @@ const app = new InformationFlowLayoutRender({
 /**
  * @param {Object} watchOptions 监听选项
  * @param {Boolean} watchOptions.scroll 是否支持滚动加载
+ * @param {Boolean} watchOptions.click 是否支持点击加载
  * @param {string} / { HTMLElement } watchOptions.dom 监听滚动的
  * @param {number} watchOptions.onEndReachedThreshold 距离底部 多少px距离 执行加载, 默认 50px
  */
 const watchOptions = {
   scroll,
+  click,
   dom,
   onEndReachedThreshold
 }
