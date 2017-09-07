@@ -2,7 +2,11 @@
 // import "core-js/fn/array.find"
 // ...
 // import "core-js/fn/array.forEach"
+import "core-js/fn/object/assign"
+
 import isEmpty from "lodash.isempty"
+
+import { completeURL, isValidURL } from "./help"
 
 import { IadItemModel } from "./interfaces"
 
@@ -250,8 +254,13 @@ export default class InformationFlowLayoutRender {
       this.statisticObj &&
       typeof this.statisticObj.createRedirectUrl === "function"
     ) {
-      // 容错
-      redirectUrl = this.statisticObj.createRedirectUrl(adItem) || curl
+      // 容错, 1. curl 补全, 2.createRedirectUrl 函数返回非字符串
+      let validURL = curl
+      if (!isValidURL(curl)) {
+        validURL = completeURL(curl)
+      }
+      const cloneItem = Object.assign({}, adItem, { curl: validURL })
+      redirectUrl = this.statisticObj.createRedirectUrl(cloneItem) || curl
     }
 
     const touchCallback = () => {
@@ -294,8 +303,13 @@ export default class InformationFlowLayoutRender {
       this.statisticObj &&
       typeof this.statisticObj.createRedirectUrl === "function"
     ) {
-      // 容错
-      redirectUrl = this.statisticObj.createRedirectUrl(adItem) || curl
+      // 容错, 1. curl 补全, 2.createRedirectUrl 函数返回非字符串
+      let validURL = curl
+      if (!isValidURL(curl)) {
+        validURL = completeURL(curl)
+      }
+      const cloneItem = Object.assign({}, adItem, { curl: validURL })
+      redirectUrl = this.statisticObj.createRedirectUrl(cloneItem) || curl
     }
 
     const winWidth = this.winWidth
@@ -340,8 +354,13 @@ export default class InformationFlowLayoutRender {
       this.statisticObj &&
       typeof this.statisticObj.createRedirectUrl === "function"
     ) {
-      // 容错
-      redirectUrl = this.statisticObj.createRedirectUrl(adItem) || curl
+      // 容错, 1. curl 补全, 2.createRedirectUrl 函数返回非字符串
+      let validURL = curl
+      if (!isValidURL(curl)) {
+        validURL = completeURL(curl)
+      }
+      const cloneItem = Object.assign({}, adItem, { curl: validURL })
+      redirectUrl = this.statisticObj.createRedirectUrl(cloneItem) || curl
     }
 
     const winWidth = this.winWidth

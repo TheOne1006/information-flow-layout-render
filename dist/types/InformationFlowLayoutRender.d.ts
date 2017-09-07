@@ -1,3 +1,4 @@
+import "core-js/fn/object/assign";
 import { IadItemModel } from "./interfaces";
 import { IconstructorOption as IStatisticOptions } from "./statisticController";
 import { IconstructorOption as ILoadOptions } from "./loadController";
