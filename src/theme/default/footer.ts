@@ -1,7 +1,7 @@
 import "core-js/fn/object/assign"
 
-const smFontSize = 12
-const spacingLg = 15
+const smFontSize = 18
+const spacingLg = 30
 
 /**
  * wrap 样式

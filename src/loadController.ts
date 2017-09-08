@@ -83,12 +83,13 @@ export default class LoadCtrl {
     const start = Math.min((currentPage - 1) * showNum, dataArr.length)
     const end = Math.min(currentPage * showNum, dataArr.length)
 
-    if (end === dataArr.length) {
+    if (end >= dataArr.length) {
       this.isEnd = true
     }
 
     const curData = dataArr.slice(start, end)
     if (curData.length) {
+      this.publish("fetch-success")
       callback(curData)
     }
   }

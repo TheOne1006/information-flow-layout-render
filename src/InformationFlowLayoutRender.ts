@@ -104,17 +104,22 @@ export default class InformationFlowLayoutRender {
       const documentEle = document.documentElement
       const needLazyLoad =
         documentEle.offsetHeight > documentEle.clientHeight + 50
-
       if (!needLazyLoad) {
         this.initRender(layout, watchOption)
       } else {
+        const that = this
         const scrollListener = () => {
           const curBody = document.body
           const scrollHeight = curBody.scrollHeight
-          const scrollTop =
-            scrollHeight - curBody.scrollTop - window.screen.height
+          const bodyScrollTop =
+            window.pageYOffset ||
+            document.documentElement.scrollTop ||
+            document.body.scrollTop ||
+            0
+          const scrollTop = scrollHeight - bodyScrollTop - window.screen.height
+
           if (scrollTop <= 0) {
-            this.initRender(layout, watchOption)
+            that.initRender(layout, watchOption)
             window.removeEventListener("scroll", scrollListener)
           }
         }
@@ -202,16 +207,19 @@ export default class InformationFlowLayoutRender {
     loadFun: Function
   ) {
     const loadObj = this.loadObj
-    let watchDom = document.body
+    let watchDom = document.documentElement || document.body
 
     if (dom && typeof dom === "string") {
-      watchDom = document.getElementById(dom) || document.body
+      watchDom =
+        document.getElementById(dom) ||
+        document.documentElement ||
+        document.body
     } else if (typeof dom === "object" && dom instanceof HTMLElement) {
       watchDom = dom
     }
 
-    const watchHeight = watchDom.clientHeight
     const scrollHandle = function() {
+      // const watchHeight = watchDom.clientHeight
       const watchDomHeight = watchDom.scrollHeight
       const scrollTop =
         watchDomHeight - watchDom.scrollTop - window.screen.height
@@ -219,7 +227,10 @@ export default class InformationFlowLayoutRender {
         loadObj.getNext(loadFun)
       }
     }
-    const bindDom = watchDom === document.body ? window : watchDom
+    const bindDom =
+      watchDom === document.body || watchDom === document.documentElement
+        ? window
+        : watchDom
 
     if (bindDom.addEventListener) {
       bindDom.addEventListener("scroll", scrollHandle)
