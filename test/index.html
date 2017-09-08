@@ -1,3 +1,4 @@
+<!-- <html xmlns="http://www.w3.org/1999/xhtml"> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -248,8 +249,8 @@ const loadOption = {
 }
 const adApp = new InformationFlowLayoutRender(loadOption);
 const watchOptions = {
-  scroll: false,
-  click: true,
+  scroll: true,
+  click: false,
 }
 const statisticOption = {
   delay: 100,
@@ -261,7 +262,7 @@ const statisticOption = {
 }
 
 
-adApp.init('demo', watchOptions, statisticOption);
+adApp.init(document.body, watchOptions, statisticOption);
 
 
 </script>

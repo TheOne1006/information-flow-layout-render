@@ -207,13 +207,10 @@ export default class InformationFlowLayoutRender {
     loadFun: Function
   ) {
     const loadObj = this.loadObj
-    let watchDom = document.documentElement || document.body
+    let watchDom = document.body
 
     if (dom && typeof dom === "string") {
-      watchDom =
-        document.getElementById(dom) ||
-        document.documentElement ||
-        document.body
+      watchDom = document.getElementById(dom) || document.body
     } else if (typeof dom === "object" && dom instanceof HTMLElement) {
       watchDom = dom
     }
@@ -221,16 +218,24 @@ export default class InformationFlowLayoutRender {
     const scrollHandle = function() {
       // const watchHeight = watchDom.clientHeight
       const watchDomHeight = watchDom.scrollHeight
-      const scrollTop =
-        watchDomHeight - watchDom.scrollTop - window.screen.height
+      let wathchScrollTop = 0
+
+      if (watchDom === document.body) {
+        wathchScrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop ||
+          0
+      } else {
+        wathchScrollTop = watchDom.scrollTop
+      }
+
+      const scrollTop = watchDomHeight - wathchScrollTop - window.screen.height
       if (scrollTop <= onEndReachedThreshold) {
         loadObj.getNext(loadFun)
       }
     }
-    const bindDom =
-      watchDom === document.body || watchDom === document.documentElement
-        ? window
-        : watchDom
+    const bindDom = watchDom === document.body ? window : watchDom
 
     if (bindDom.addEventListener) {
       bindDom.addEventListener("scroll", scrollHandle)
