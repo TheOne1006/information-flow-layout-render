@@ -6,6 +6,7 @@ export declare const layoutType: {
     IMG_TEXT: number;
     IMGS: number;
     VIDEO: number;
+    IMG_TEXT_AD: number;
 };
 export declare const remarkType: {
     SHOW_DESC: number;
@@ -17,6 +18,7 @@ declare const _default: {
         IMG_TEXT: number;
         IMGS: number;
         VIDEO: number;
+        IMG_TEXT_AD: number;
     };
     remarkType: {
         SHOW_DESC: number;

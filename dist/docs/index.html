@@ -995,7 +995,8 @@ app.init(dom, watchOptions, statisticOption, isLazy)
 <span class="hljs-keyword">const</span> BIG_IMG = <span class="hljs-number">0</span>    <span class="hljs-comment">// 全文大图</span>
 <span class="hljs-keyword">const</span> IMG_TEXT = <span class="hljs-number">1</span>   <span class="hljs-comment">// 左侧1张图, 右侧内容</span>
 <span class="hljs-keyword">const</span> IMGS = <span class="hljs-number">2</span>       <span class="hljs-comment">// 多图模式</span>
-
+<span class="hljs-keyword">const</span> VIDEO = <span class="hljs-number">3</span>      <span class="hljs-comment">// 视频模式</span>
+<span class="hljs-keyword">const</span> IMG_TEXT_AD = <span class="hljs-number">4</span><span class="hljs-comment">// 广告三图模式</span>
 <span class="hljs-comment">// type</span>
 <span class="hljs-keyword">const</span> SHOW_DESC = <span class="hljs-number">0</span>       <span class="hljs-comment">// 显示描述</span>
 <span class="hljs-keyword">const</span> SHOW_SRC_TIME = <span class="hljs-number">1</span>   <span class="hljs-comment">// 显示来源和日期</span>
@@ -1046,6 +1047,22 @@ app.init(dom, watchOptions, statisticOption, isLazy)
     <span class="hljs-string">"time"</span>:<span class="hljs-string">"yy-dd"</span>, <span class="hljs-comment">// SHOW_DESC 非必填</span>
     <span class="hljs-string">"stype"</span>: IMG_TEXT,
     <span class="hljs-string">"type"</span>: SHOW_DESC,
+  },
+  {
+    <span class="hljs-string">"curl"</span>:<span class="hljs-string">"http://url.com"</span>,          <span class="hljs-comment">// 跳转地址</span>
+    <span class="hljs-string">"title"</span>:<span class="hljs-string">"title"</span>,                  <span class="hljs-comment">// 必填</span>
+    <span class="hljs-string">"desc"</span>:<span class="hljs-string">"this is a description"</span>,   <span class="hljs-comment">// SHOW_DESC 显示描述, 必填, 否则不显示</span>
+    <span class="hljs-string">"images"</span>: [
+      <span class="hljs-string">"img uri"</span>,
+      <span class="hljs-string">"img uri"</span>,
+      <span class="hljs-string">"img uri"</span>,
+    ],
+    <span class="hljs-string">"src"</span>:<span class="hljs-string">"来源"</span>,
+    <span class="hljs-string">"time"</span>:<span class="hljs-string">"yy-dd"</span>,
+    <span class="hljs-string">"stype"</span>: IMG_TEXT_AD,
+    <span class="hljs-string">"type"</span>: SHOW_DESC,
+    <span class="hljs-string">"monitorUrl"</span>: [<span class="hljs-string">"/demo.png"</span>], <span class="hljs-comment">// 曝光 url, 多为图片</span>
+    <span class="hljs-string">"reqUrls"</span>: [<span class="hljs-string">"/demo.png"</span>] <span class="hljs-comment">// 曝光 请求 url, 多为图片</span>
   },
 ]
 </code></pre>
@@ -1149,6 +1166,7 @@ semantic-release setup
 							<li class="tsd-kind-external-module"><a href="modules/_sections_basesection_.html" class="tsd-kind-icon">"sections/base<wbr>Section"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_sections_bigimgsection_.html" class="tsd-kind-icon">"sections/big<wbr>Img<wbr>Section"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_sections_imgtextsection_.html" class="tsd-kind-icon">"sections/img<wbr>Text<wbr>Section"</a></li>
+							<li class="tsd-kind-external-module"><a href="modules/_sections_imgsadsection_.html" class="tsd-kind-icon">"sections/imgs<wbr>AdSection"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_sections_imgssection_.html" class="tsd-kind-icon">"sections/imgs<wbr>Section"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_sections_layoutsections_.html" class="tsd-kind-icon">"sections/layout<wbr>Sections"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_sections_videosection_.html" class="tsd-kind-icon">"sections/video<wbr>Section"</a></li>
