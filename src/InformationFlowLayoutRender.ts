@@ -21,6 +21,7 @@ import LoadCtrl, { IconstructorOption as ILoadOptions } from "./loadController"
 import BigImgSection from "./sections/bigImgSection"
 import ImgsSection from "./sections/imgsSection"
 import ImgTextSection from "./sections/imgTextSection"
+
 import ImgsAdSection from "./sections/imgsAdSection"
 import LayoutsSection from "./sections/layoutSections"
 import VideoSection from "./sections/videoSection"
