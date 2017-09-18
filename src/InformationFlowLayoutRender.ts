@@ -21,6 +21,7 @@ import LoadCtrl, { IconstructorOption as ILoadOptions } from "./loadController"
 import BigImgSection from "./sections/bigImgSection"
 import ImgsSection from "./sections/imgsSection"
 import ImgTextSection from "./sections/imgTextSection"
+import ImgsAdSection from "./sections/imgsAdSection"
 import LayoutsSection from "./sections/layoutSections"
 import VideoSection from "./sections/videoSection"
 
@@ -35,6 +36,7 @@ const videoSectioner = new VideoSection()
 const imgTextSectioner = new ImgTextSection()
 const bigImgSectioner = new BigImgSection()
 const imgsSectioner = new ImgsSection()
+const imgsAdSectioner = new ImgsAdSection()
 const layoutsSectioner = new LayoutsSection()
 
 export default class InformationFlowLayoutRender {
@@ -175,6 +177,7 @@ export default class InformationFlowLayoutRender {
     const IMG_TEXT = layoutType.IMG_TEXT
     const IMGS = layoutType.IMGS
     const VIDEO = layoutType.VIDEO
+    const IMG_TEXT_AD = layoutType.IMG_TEXT_AD
 
     data.forEach((item: IadItemModel) => {
       switch (item.stype) {
@@ -189,6 +192,9 @@ export default class InformationFlowLayoutRender {
           break
         case VIDEO:
           videoSectioner.render(fragment, this.winWidth, item)
+          break
+        case IMG_TEXT_AD:
+          this.renderImgsAdItem(fragment, item)
           break
         default:
           return
@@ -392,6 +398,57 @@ export default class InformationFlowLayoutRender {
     }
 
     imgsSectioner.render(
+      container,
+      winWidth,
+      adItem,
+      redirectUrl,
+      touchCallback
+    )
+  }
+  renderImgsAdItem(container: DocumentFragment, adItem: IadItemModel) {
+    const {
+      title,
+      curl,
+      images,
+      target,
+      desc,
+      src,
+      time,
+      type,
+      sxinitemid
+    } = adItem
+    if (!images || images.length === 0) {
+      return
+    }
+
+    let redirectUrl = curl
+
+    if (
+      this.statisticObj &&
+      typeof this.statisticObj.createRedirectUrl === "function"
+    ) {
+      // 容错, 1. curl 补全, 2.createRedirectUrl 函数返回非字符串
+      let validURL = curl
+      if (!isValidURL(curl)) {
+        validURL = completeURL(curl)
+      }
+      const cloneItem = Object.assign({}, adItem, { curl: validURL })
+      redirectUrl = this.statisticObj.createRedirectUrl(cloneItem) || curl
+    }
+
+    const winWidth = this.winWidth
+
+    const touchCallback = () => {
+      if (this.statisticObj) {
+        this.statisticObj.materielClick(sxinitemid)
+        setTimeout(() => {
+          window.open(redirectUrl, target || "_target")
+        }, this.statisticObj.delay)
+        return false
+      }
+    }
+
+    imgsAdSectioner.render(
       container,
       winWidth,
       adItem,

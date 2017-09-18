@@ -86,7 +86,8 @@ data 格式
 const BIG_IMG = 0    // 全文大图
 const IMG_TEXT = 1   // 左侧1张图, 右侧内容
 const IMGS = 2       // 多图模式
-
+const VIDEO = 3      // 视频模式
+const IMG_TEXT_AD = 4// 广告三图模式
 // type
 const SHOW_DESC = 0       // 显示描述
 const SHOW_SRC_TIME = 1   // 显示来源和日期
@@ -137,6 +138,22 @@ var data = [
     "time":"yy-dd", // SHOW_DESC 非必填
     "stype": IMG_TEXT,
     "type": SHOW_DESC,
+  },
+  {
+    "curl":"http://url.com",          // 跳转地址
+    "title":"title",                  // 必填
+    "desc":"this is a description",   // SHOW_DESC 显示描述, 必填, 否则不显示
+    "images": [
+      "img uri",
+      "img uri",
+      "img uri",
+    ],
+    "src":"来源",
+    "time":"yy-dd",
+    "stype": IMG_TEXT_AD,
+    "type": SHOW_DESC,
+    "monitorUrl": ["/demo.png"], // 曝光 url, 多为图片
+    "reqUrls": ["/demo.png"] // 曝光 请求 url, 多为图片
   },
 ]
 

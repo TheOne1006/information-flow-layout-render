@@ -29,5 +29,6 @@ export default class InformationFlowLayoutRender {
     renderBigImgItem(container: DocumentFragment, adItem: IadItemModel): void;
     renderImgTextItem(container: DocumentFragment, adItem: IadItemModel): void;
     renderImgsItem(container: DocumentFragment, adItem: IadItemModel): void;
+    renderImgsAdItem(container: DocumentFragment, adItem: IadItemModel): void;
     footer(isEnd?: boolean, isLoading?: boolean): HTMLElement;
 }

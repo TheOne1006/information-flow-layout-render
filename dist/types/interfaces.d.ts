@@ -14,4 +14,7 @@ export interface IadItemModel {
     time?: string;
     type?: any;
     sxinitemid?: any;
+    monitorUrl?: string[];
+    reqUrls?: string[];
+    clickUrls?: string[];
 }
