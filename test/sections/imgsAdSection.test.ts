@@ -21,14 +21,27 @@ describe("class ImgsAdSection", () => {
     expect(section).toBeInstanceOf(ImgsAdSection)
   })
 
-  describe("ImgsAdSection Fun createAdImgs to create dom with img", () => {
+  describe("ImgsAdSection Fun createExposureImgs to create dom with img", () => {
     it("return a DIV Dom with arguments", () => {
       const images = ["/demo.png", "/demo.png", "/demo.png"]
-      const target = section.createAdImgs(winWidth, images)
+      const target = section.createExposureImgs(winWidth, images)
 
       expect(target.nodeName).toBe("SPAN")
       const childrens = target.children
       expect(childrens).toHaveLength(3)
+    })
+  })
+
+  describe("ImgsAdSection Fun createContent to wrapDom with adMask", () => {
+    it("return a Wrap Dom incloude ad mask", () => {
+      const images = ["/demo.png", "/demo.png", "/demo.png"]
+      const target = section.createContent(winWidth, images)
+
+      const childrens = target.children
+      const adMask = childrens[3]
+      expect(target.nodeName).toBe("DIV")
+      expect(childrens).toHaveLength(4)
+      expect(adMask.innerText).toBe("广告")
     })
   })
 
@@ -56,7 +69,7 @@ describe("class ImgsAdSection", () => {
       const wrapDom = childrens[0]
       expect(wrapDom.nodeName).toBe("A")
       const others = wrapDom.children
-      expect(others).toHaveLength(6)
+      expect(others).toHaveLength(4)
       const exposureDom = childrens[1]
       expect(exposureDom.nodeName).toBe("SPAN")
       expect(exposureDom.children).toHaveLength(2)

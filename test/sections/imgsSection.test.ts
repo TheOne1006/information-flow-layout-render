@@ -50,12 +50,14 @@ describe("class ImgsSection", () => {
     })
   })
 
-  describe("ImgsSection Fun createContent to create array", () => {
+  describe("ImgsSection Fun createContent to create wrapDom", () => {
     it("return a DIV Dom with arguments", () => {
       const images = ["/demo.png", "/demo.png", "/demo.png"]
-      const result = section.createContent(winWidth, images)
+      const wrap = section.createContent(winWidth, images)
 
-      expect(result).toHaveLength(3)
+      const imgsContent = wrap.children
+      expect(wrap.nodeName).toBe("DIV")
+      expect(imgsContent).toHaveLength(3)
     })
   })
 
@@ -96,7 +98,7 @@ describe("class ImgsSection", () => {
       const wrapDom = childrens[0]
       expect(wrapDom.nodeName).toBe("A")
       const others = wrapDom.children
-      expect(others).toHaveLength(6)
+      expect(others).toHaveLength(4)
     })
 
     it("render return undefined with error arguments", () => {

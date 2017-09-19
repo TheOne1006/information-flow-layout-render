@@ -2,14 +2,30 @@ import ImgsSection from "./ImgsSection"
 
 import { IadItemModel } from "../interfaces"
 
+import imgsAdStyle from "../theme/default/imgsAd"
+
 class ImgsAdSection extends ImgsSection {
+  createContent(winWidth: number, images: string[]) {
+    const wrap = super.createContent(winWidth, images)
+    const adMask = this.buildDom(
+      "div",
+      {
+        innerText: "广告"
+      },
+      () => imgsAdStyle.configAdMaskCreate(winWidth)
+    )
+
+    wrap.appendChild(adMask)
+
+    return wrap
+  }
   /**
    * 创建广告统计的 img
    * @param  {number} winWidth
    * @param  {array} title
    * @return {[type]}          [description]
    */
-  createAdImgs(winWidth: number, urls: string[]) {
+  createExposureImgs(winWidth: number, urls: string[]) {
     const wrapDom = this.buildDom("span", {}, () => ({ display: "none" }))
 
     const imgLen = urls.length
@@ -44,7 +60,7 @@ class ImgsAdSection extends ImgsSection {
       adUrls = adUrls.concat(reqUrls)
     }
 
-    const adDom = this.createAdImgs(winWidth, adUrls)
+    const adDom = this.createExposureImgs(winWidth, adUrls)
     fragment.appendChild(adDom)
   }
 }

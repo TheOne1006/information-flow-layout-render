@@ -45,6 +45,11 @@ class ImgsSection extends BaseSection {
     return titleEle
   }
   createContent(winWidth: number, images: string[]) {
+    // imgsWrapDom
+    const wrapDom = this.buildDom("div", {}, () =>
+      imgsStyle.configImgsWrapCreate(winWidth)
+    )
+
     const contentEles = []
     const imgLen = images.length
 
@@ -66,7 +71,11 @@ class ImgsSection extends BaseSection {
       contentEles.push(imgItem)
     }
 
-    return contentEles
+    for (let index in contentEles) {
+      wrapDom.appendChild(contentEles[index])
+    }
+
+    return wrapDom
   }
   createRemark(
     winWidth: number,
@@ -101,15 +110,13 @@ class ImgsSection extends BaseSection {
       touchCallback
     )
     const titleEle = this.createTitle(winWidth, title)
-    const contentEles = this.createContent(winWidth, images)
+    const contentEle = this.createContent(winWidth, images)
     const remarkEle = this.createRemark(winWidth, type, desc, src, time)
     const lineEle = this.createLineDom(winWidth, 0)
 
     // 组装dom
     wraperEle.appendChild(titleEle)
-    for (let index in contentEles) {
-      wraperEle.appendChild(contentEles[index])
-    }
+    wraperEle.appendChild(contentEle)
     wraperEle.appendChild(remarkEle)
     wraperEle.appendChild(lineEle)
     fragment.appendChild(wraperEle)

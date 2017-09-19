@@ -68,6 +68,23 @@ export const configTitleCreate = (winWidth: number, customStyles?: any) => {
   )
 }
 
+const defaultImgsWrapConfig = {
+  position: "relative",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "auto",
+  display: "block",
+  padding: "none",
+  margin: "none",
+  border: "none",
+  overflow: "hidden"
+}
+
+export const configImgsWrapCreate = (winWidth: number, customStyles?: any) => {
+  return Object.assign({}, defaultImgsWrapConfig, {}, customStyles)
+}
+
 /**
  * imgItem 样式
  */
@@ -105,5 +122,6 @@ export const configImgItemCreate = (
 export default {
   configWrapCreate,
   configTitleCreate,
-  configImgItemCreate
+  configImgItemCreate,
+  configImgsWrapCreate
 }
