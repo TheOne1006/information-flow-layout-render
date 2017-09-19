@@ -6,7 +6,7 @@ import "core-js/fn/object/assign"
 
 import isEmpty from "lodash.isempty"
 
-import { completeURL, isValidURL } from "./help"
+import helper from "./help"
 
 import { IadItemModel } from "./interfaces"
 
@@ -104,24 +104,32 @@ export default class InformationFlowLayoutRender {
       // 监听对象非body
       this.initRender(layout, watchOption)
     } else {
-      const documentEle = document.documentElement
-      const needLazyLoad =
-        documentEle.scrollHeight > documentEle.clientHeight + 50
-      if (!needLazyLoad) {
+      /**
+       *  jquery 实现
+       *  var doc_height = $(document).height();
+       *  var scroll_top = $(window).scrollTop();
+       *  var window_height = $(window).height();
+       *  scroll_top + window_height >= doc_height 底部
+       */
+      const body = document.body
+      const docHeight = helper.getEleHeight(document) // 文档高度
+      const winHeight = helper.getEleHeight(window) // 可视区高度
+
+      const initScrollTop = helper.getScrollTop(window) // 初始化时的滚动高度
+      const isInBottom = initScrollTop + winHeight >= docHeight - 10
+
+      // 存在底部,略过监听
+      if (isInBottom) {
         this.initRender(layout, watchOption)
       } else {
         const that = this
-        const scrollListener = () => {
-          const curBody = document.body
-          const scrollHeight = curBody.scrollHeight
-          const bodyScrollTop =
-            window.pageYOffset ||
-            document.documentElement.scrollTop ||
-            document.body.scrollTop ||
-            0
-          const scrollTop = scrollHeight - bodyScrollTop - window.screen.height
 
-          if (scrollTop <= 0) {
+        const scrollListener = () => {
+          // 监听
+          const scrollListenTop = helper.getScrollTop(window) // 距离顶部的距离
+          const isInListenBottom = scrollListenTop + winHeight >= docHeight - 10
+
+          if (isInListenBottom) {
             that.initRender(layout, watchOption)
             window.removeEventListener("scroll", scrollListener)
           }
@@ -215,29 +223,34 @@ export default class InformationFlowLayoutRender {
   ) {
     const loadObj = this.loadObj
     let watchDom = document.body
+    let watchDomHeight = 0
 
     if (dom && typeof dom === "string") {
       watchDom = document.getElementById(dom) || document.body
     } else if (typeof dom === "object" && dom instanceof HTMLElement) {
       watchDom = dom
+      watchDomHeight = helper.getEleHeight(watchDom)
+    }
+
+    if (watchDom === document.body) {
+      watchDomHeight = helper.getEleHeight(window)
+    } else {
+      watchDomHeight = helper.getEleHeight(watchDom)
     }
 
     const scrollHandle = function() {
-      // const watchHeight = watchDom.clientHeight
-      const watchDomHeight = watchDom.scrollHeight
-      let wathchScrollTop = 0
+      let watchDomDocHeight = 0 // 文档可滚动高度
+      let wathchScrollTop = 0 // 滚动高度
 
       if (watchDom === document.body) {
-        wathchScrollTop =
-          window.pageYOffset ||
-          document.documentElement.scrollTop ||
-          document.body.scrollTop ||
-          0
+        watchDomDocHeight = helper.getEleHeight(document)
+        wathchScrollTop = helper.getScrollTop(window)
       } else {
-        wathchScrollTop = watchDom.scrollTop
+        wathchScrollTop = helper.getScrollTop(watchDom)
+        watchDomDocHeight = watchDom.scrollHeight
       }
 
-      const scrollTop = watchDomHeight - wathchScrollTop - window.screen.height
+      const scrollTop = watchDomDocHeight - wathchScrollTop - watchDomHeight
       if (scrollTop <= onEndReachedThreshold) {
         loadObj.getNext(loadFun)
       }
@@ -279,8 +292,8 @@ export default class InformationFlowLayoutRender {
     ) {
       // 容错, 1. curl 补全, 2.createRedirectUrl 函数返回非字符串
       let validURL = curl
-      if (!isValidURL(curl)) {
-        validURL = completeURL(curl)
+      if (!helper.isValidURL(curl)) {
+        validURL = helper.completeURL(curl)
       }
       const cloneItem = Object.assign({}, adItem, { curl: validURL })
       redirectUrl = this.statisticObj.createRedirectUrl(cloneItem) || curl
@@ -328,8 +341,8 @@ export default class InformationFlowLayoutRender {
     ) {
       // 容错, 1. curl 补全, 2.createRedirectUrl 函数返回非字符串
       let validURL = curl
-      if (!isValidURL(curl)) {
-        validURL = completeURL(curl)
+      if (!helper.isValidURL(curl)) {
+        validURL = helper.completeURL(curl)
       }
       const cloneItem = Object.assign({}, adItem, { curl: validURL })
       redirectUrl = this.statisticObj.createRedirectUrl(cloneItem) || curl
@@ -379,8 +392,8 @@ export default class InformationFlowLayoutRender {
     ) {
       // 容错, 1. curl 补全, 2.createRedirectUrl 函数返回非字符串
       let validURL = curl
-      if (!isValidURL(curl)) {
-        validURL = completeURL(curl)
+      if (!helper.isValidURL(curl)) {
+        validURL = helper.completeURL(curl)
       }
       const cloneItem = Object.assign({}, adItem, { curl: validURL })
       redirectUrl = this.statisticObj.createRedirectUrl(cloneItem) || curl
@@ -430,8 +443,8 @@ export default class InformationFlowLayoutRender {
     ) {
       // 容错, 1. curl 补全, 2.createRedirectUrl 函数返回非字符串
       let validURL = curl
-      if (!isValidURL(curl)) {
-        validURL = completeURL(curl)
+      if (!helper.isValidURL(curl)) {
+        validURL = helper.completeURL(curl)
       }
       const cloneItem = Object.assign({}, adItem, { curl: validURL })
       redirectUrl = this.statisticObj.createRedirectUrl(cloneItem) || curl
