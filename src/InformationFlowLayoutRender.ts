@@ -106,7 +106,7 @@ export default class InformationFlowLayoutRender {
     } else {
       const documentEle = document.documentElement
       const needLazyLoad =
-        documentEle.offsetHeight > documentEle.clientHeight + 50
+        documentEle.scrollHeight > documentEle.clientHeight + 50
       if (!needLazyLoad) {
         this.initRender(layout, watchOption)
       } else {
