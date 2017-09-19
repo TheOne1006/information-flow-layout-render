@@ -1,7 +1,7 @@
 import ImgsSection from "./ImgsSection";
 import { IadItemModel } from "../interfaces";
 declare class ImgsAdSection extends ImgsSection {
-    createContent(winWidth: number, images: string[]): any;
+    createRemark(winWidth: number, type: number, desc?: string, src?: string, time?: string): any;
     /**
      * 创建广告统计的 img
      * @param  {number} winWidth

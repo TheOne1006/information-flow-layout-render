@@ -57,7 +57,8 @@ describe("class BaseSection for create Dom Base", () => {
       const desc = "desc"
       const top = 10
       const left = 10
-      const targetDom = base.createDescDom(winWidth, top, left, desc)
+      const wrapDom = base.createDescDom(winWidth, top, left, desc)
+      const targetDom = wrapDom.children[0]
 
       expect(targetDom.innerText).toBe(desc)
       expect(targetDom.style.top).toBe(`${top}px`)

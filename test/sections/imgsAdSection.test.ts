@@ -21,27 +21,22 @@ describe("class ImgsAdSection", () => {
     expect(section).toBeInstanceOf(ImgsAdSection)
   })
 
-  describe("ImgsAdSection Fun createExposureImgs to create dom with img", () => {
+  describe("ImgsAdSection Fun createRemark to create dom with img", () => {
     it("return a DIV Dom with arguments", () => {
-      const images = ["/demo.png", "/demo.png", "/demo.png"]
-      const target = section.createExposureImgs(winWidth, images)
+      const target = section.createRemark(
+        winWidth,
+        remarkType.SHOW_DESC,
+        "",
+        "",
+        "desc"
+      )
 
-      expect(target.nodeName).toBe("SPAN")
-      const childrens = target.children
-      expect(childrens).toHaveLength(3)
-    })
-  })
-
-  describe("ImgsAdSection Fun createContent to wrapDom with adMask", () => {
-    it("return a Wrap Dom incloude ad mask", () => {
-      const images = ["/demo.png", "/demo.png", "/demo.png"]
-      const target = section.createContent(winWidth, images)
-
-      const childrens = target.children
-      const adMask = childrens[3]
-      expect(target.nodeName).toBe("DIV")
-      expect(childrens).toHaveLength(4)
-      expect(adMask.innerText).toBe("广告")
+      expect(section.createSrcAndTimeDom.mock.calls).toHaveLength(0)
+      expect(section.createDescDom.mock.calls).toHaveLength(1)
+      const children = target.children
+      const lastDomIndex = children.length - 1
+      const lastChildren = children[lastDomIndex]
+      expect(lastChildren.innerText).toBe("广告")
     })
   })
 

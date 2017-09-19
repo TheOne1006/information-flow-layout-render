@@ -8,10 +8,13 @@ const defaultWrapConfig = {
   // left: "", // from customStyles
   // width: "", // from customStyles
   // height: "", // from customStyles
+  height: 20,
   display: "block",
-  position: "",
-  "line-height": "100%",
-  "text-align": "left"
+  "line-height": 20,
+  "text-align": "left",
+  position: "relative",
+  left: 0,
+  top: 0
 }
 
 function configWrapCreate(winWidth: number, customStyles: any) {

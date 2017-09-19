@@ -5,8 +5,14 @@ import { IadItemModel } from "../interfaces"
 import imgsAdStyle from "../theme/default/imgsAd"
 
 class ImgsAdSection extends ImgsSection {
-  createContent(winWidth: number, images: string[]) {
-    const wrap = super.createContent(winWidth, images)
+  createRemark(
+    winWidth: number,
+    type: number,
+    desc?: string,
+    src?: string,
+    time?: string
+  ) {
+    const wrap = super.createRemark(winWidth, type, desc, src, time)
     const adMask = this.buildDom(
       "div",
       {
@@ -19,6 +25,20 @@ class ImgsAdSection extends ImgsSection {
 
     return wrap
   }
+  // createContent(winWidth: number, images: string[]) {
+  //   const wrap = super.createContent(winWidth, images)
+  //   const adMask = this.buildDom(
+  //     "div",
+  //     {
+  //       innerText: "广告"
+  //     },
+  //     () => imgsAdStyle.configAdMaskCreate(winWidth)
+  //   )
+  //
+  //   wrap.appendChild(adMask)
+  //
+  //   return wrap
+  // }
   /**
    * 创建广告统计的 img
    * @param  {number} winWidth

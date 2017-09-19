@@ -53,7 +53,7 @@ export class BaseSection {
       innerText: desc || ""
     }
 
-    const descStyles = createDescStyles(winWidth, {
+    const descStyles = createDescStyles.configDescCreate(winWidth, {
       top,
       left,
       "margin-top": top,
@@ -61,7 +61,12 @@ export class BaseSection {
     })
 
     const target = this.buildDom("div", attrs, () => descStyles)
-    return target
+    const wrap = this.buildDom("div", {}, () =>
+      createDescStyles.configDescWrapCreate(winWidth)
+    )
+    wrap.appendChild(target)
+    // const wrap = this.buildDom("div", attrs, () => descWrapStyles)
+    return wrap
   }
   /**
    * 创建 src 和 time 的相关 dom
@@ -88,7 +93,6 @@ export class BaseSection {
 
     const customStyles = {
       top,
-      left,
       height,
       "margin-left": left,
       "margin-top": top

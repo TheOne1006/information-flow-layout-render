@@ -4,11 +4,11 @@ const smFontSize = 12
 /**
  * baseLine 样式
  */
-const defaultConfig = {
+const defaultDescConfig = {
   // top: 0, from custom
   // left: 0, from custom
   width: "",
-  height: 12,
+  height: 20,
   display: "inline-block",
   position: "",
   "background-color": "#fff",
@@ -19,7 +19,7 @@ const defaultConfig = {
   "font-family": "Arial, Helvetica, sans-serif",
   "text-align": "left",
   // "background-colror": "#",
-  "line-height": 12,
+  "line-height": 20,
   // "white-space": "nowrap",
   "text-overflow": "ellipsis",
   "o-text-overflow": "ellipsis",
@@ -28,7 +28,32 @@ const defaultConfig = {
   border: ""
 }
 
-function configCreate(winWidth: number, customStyles: any) {
-  return Object.assign({}, defaultConfig, customStyles)
+function configDescCreate(winWidth: number, customStyles: any) {
+  return Object.assign(
+    {},
+    defaultDescConfig,
+    {
+      "max-width": winWidth - 80 + "px"
+    },
+    customStyles
+  )
 }
-export default configCreate
+
+const defaultWrapConfig = {
+  display: "block",
+  position: "relative",
+  left: 0,
+  top: 0,
+  height: "auto",
+  "line-height": "100%",
+  "text-align": "left"
+}
+
+function configDescWrapCreate(winWidth: number, customStyles?: any) {
+  return Object.assign({}, defaultWrapConfig, customStyles)
+}
+
+export default {
+  configDescCreate,
+  configDescWrapCreate
+}
