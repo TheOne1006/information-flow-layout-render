@@ -102,10 +102,27 @@ export const getScrollTop = (dom: any) => {
   return dom[method]
 }
 
+// parseUrl in window https://gist.github.com/jlong/2428561
+export const parseUrl = (url: string) => {
+  const parser = document.createElement("a")
+  parser.href = url
+  const urlObj = {
+    protocol: parser.protocol, // => "http:"
+    hostname: parser.hostname, // => "example.com"
+    port: parser.port, // => "3000"
+    pathname: parser.pathname, // => "/pathname/"
+    search: parser.search, // => "?search=test"
+    hash: parser.hash, // => "#hash"
+    host: parser.host // => "example.com:3000"
+  }
+  return urlObj
+}
+
 export default {
   isValidURL,
   completeURL,
   getEleHeight,
   getEleWidth,
-  getScrollTop
+  getScrollTop,
+  parseUrl
 }

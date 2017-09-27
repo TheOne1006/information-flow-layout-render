@@ -87,7 +87,7 @@ const BIG_IMG = 0    // 全文大图
 const IMG_TEXT = 1   // 左侧1张图, 右侧内容
 const IMGS = 2       // 多图模式
 const VIDEO = 3      // 视频模式
-const IMG_TEXT_AD = 4// 广告三图模式
+const IMGS_AD = 4 // 广告三图模式
 // type
 const SHOW_DESC = 0       // 显示描述
 const SHOW_SRC_TIME = 1   // 显示来源和日期
@@ -150,7 +150,7 @@ var data = [
     ],
     "src":"来源",
     "time":"yy-dd",
-    "stype": IMG_TEXT_AD,
+    "stype": IMGS_AD,
     "type": SHOW_DESC,
     "monitorUrl": ["/demo.png"], // 曝光 url, 多为图片
     "reqUrls": ["/demo.png"] // 曝光 请求 url, 多为图片

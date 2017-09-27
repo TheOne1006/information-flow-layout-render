@@ -1,4 +1,5 @@
 import { compile as pathCompile } from "path-to-regexp"
+import { parseUrl } from "./help"
 /**
  * 用于处理数据统计
  */
@@ -43,14 +44,18 @@ export default class StatisticCtrl {
    */
   public materielClick(sxinitemid?: string | number) {
     if (!this.url) return
-    const toPath = pathCompile(this.url)
+    const urlObj = parseUrl(this.url)
+    const path = urlObj.pathname + urlObj.search
+    const toPath = pathCompile(path)
     const src = toPath({ sxinid: this.sxinid, sxinitemid })
-    this.scriptWay(src)
+    this.scriptWay(urlObj.protocol + "//" + urlObj.host + src)
   }
   public firstRender() {
     if (!this.firstRenderUrl) return
-    const toPath = pathCompile(this.firstRenderUrl)
+    const urlObj = parseUrl(this.firstRenderUrl)
+    const path = urlObj.pathname + urlObj.search
+    const toPath = pathCompile(path)
     const src = toPath({ sxinid: this.sxinid })
-    this.scriptWay(src)
+    this.scriptWay(urlObj.protocol + "//" + urlObj.host + src)
   }
 }
